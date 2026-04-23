@@ -1,6 +1,6 @@
 # apps.digitalgrease.github.io
 
-Source for **[apps.digitalgrease.net](https://apps.digitalgrease.net)** — the
+Source for **[apps.digitalgrease.dev](https://apps.digitalgrease.dev)** — the
 showcase site for the Digital Grease app portfolio
 (Fauxx, Obscura, Effigy, Signet).
 
@@ -31,11 +31,11 @@ custom domain.
 
 ### One-time setup (manual, outside this repo)
 
-These two steps are required before `https://apps.digitalgrease.net`
+These two steps are required before `https://apps.digitalgrease.dev`
 resolves. The GitHub Actions deploy will succeed regardless — the domain
 just won't point at it until both are done.
 
-1. **DNS** — at the `digitalgrease.net` registrar, add:
+1. **DNS** — at the `digitalgrease.dev` registrar, add:
 
    ```
    Type:  CNAME

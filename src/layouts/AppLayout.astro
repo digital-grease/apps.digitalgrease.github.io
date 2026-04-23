@@ -18,18 +18,23 @@ const {
   repo,
   privacy,
   accent,
+  icon,
   downloads,
 } = app.data;
 
 const pageTitle = `${name} — apps.digitalgrease`;
+const iconSrc = icon ?? `/apps/${app.id}/icon.png`;
 ---
 
-<BaseLayout title={pageTitle} description={tagline} ogType="article">
+<BaseLayout title={pageTitle} description={tagline} ogType="article" ogImage={iconSrc}>
   <article class="app-page" style={accent ? `--app-accent: ${accent};` : undefined}>
     <header class="app-hero">
       <div class="hero-top">
-        <h1>{name}</h1>
-        <StatusBadge status={status} />
+        <img class="hero-icon" src={iconSrc} alt="" width="72" height="72" decoding="async" />
+        <div class="hero-title-group">
+          <h1>{name}</h1>
+          <StatusBadge status={status} />
+        </div>
       </div>
       <p class="hero-tagline">{tagline}</p>
 
@@ -93,13 +98,29 @@ const pageTitle = `${name} — apps.digitalgrease`;
 
   .hero-top {
     display: flex;
-    align-items: baseline;
-    gap: 0.75rem;
+    align-items: center;
+    gap: 1rem;
     flex-wrap: wrap;
     margin-top: 1.25rem;
   }
 
-  .hero-top h1 {
+  .hero-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 14px;
+    background: var(--bg-raised);
+    object-fit: contain;
+    flex: 0 0 72px;
+  }
+
+  .hero-title-group {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-title-group h1 {
     margin: 0;
     color: var(--app-accent, var(--accent-bright));
   }

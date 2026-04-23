@@ -7,10 +7,13 @@ interface Props {
   title: string;
   description: string;
   ogType?: 'website' | 'article';
+  ogImage?: string;
 }
 
-const { title, description, ogType = 'website' } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const { title, description, ogType = 'website', ogImage } = Astro.props;
+const cleanPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/');
+const canonical = new URL(cleanPath, Astro.site).href;
+const ogImageUrl = ogImage ? new URL(ogImage, Astro.site).href : undefined;
 ---
 
 <!doctype html>
@@ -29,16 +32,19 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
 
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
 
     <meta name="color-scheme" content="dark" />
   </head>
   <body>
+    <a href="#main" class="skip-link">Skip to content</a>
     <Nav />
-    <main class="site-main">
+    <main class="site-main" id="main" tabindex="-1">
       <slot />
     </main>
     <Footer />
@@ -47,6 +53,29 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
         max-width: var(--w-wide);
         margin: 0 auto;
         padding: 2rem 1.5rem 4rem;
+      }
+
+      .site-main:focus {
+        outline: none;
+      }
+
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--accent);
+        color: var(--bg);
+        font-weight: 700;
+        border-radius: var(--radius);
+        z-index: 1000;
+        transition: top 120ms ease;
+      }
+
+      .skip-link:focus {
+        top: 0.5rem;
+        outline: 2px solid var(--accent-bright);
+        outline-offset: 2px;
       }
     </style>
   </body>

@@ -12,6 +12,7 @@ const apps = defineCollection({
     repo: z.string().url(),
     privacy: z.string().url().optional(),
     accent: z.string().optional(),
+    icon: z.string().optional(),
     downloads: z
       .object({
         github: z.string().url().optional(),
