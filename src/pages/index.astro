@@ -2,35 +2,58 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AppCard from '../components/AppCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
 
 const apps = (await getCollection('apps')).sort(
   (a, b) => (a.data.order ?? 0) - (b.data.order ?? 0),
 );
+const projects = (await getCollection('projects')).sort(
+  (a, b) => (a.data.order ?? 0) - (b.data.order ?? 0),
+);
+const tools = projects.filter((p) => p.data.kind === 'tool');
+const research = projects.filter((p) => p.data.kind === 'research');
 
-const title = 'apps.digitalgrease — privacy-first, local-first apps';
+const title = 'digitalgrease — software, research, privacy-first apps';
 const description =
-  'Open-source privacy tools by Digital Grease: Fauxx, Obscura, Effigy, Signet. Local-first, no accounts, no telemetry.';
+  'Open-source tools, research, and privacy-first mobile apps by Digital Grease. Local-first where possible, no accounts, no telemetry.';
 ---
 
 <BaseLayout title={title} description={description}>
   <section class="hero">
-    <p class="eyebrow">// digitalgrease / apps</p>
-    <h1>Privacy-first, local-first apps.</h1>
+    <p class="eyebrow">// digitalgrease / software</p>
+    <h1>Software for the threat model of now.</h1>
     <p class="lead">
-      A small portfolio of open-source tools for the threat model of
+      Open-source tools, research, and privacy-first apps for the threat model of
       <em>now</em> — biographical retrieval by LLMs, voice-deepfake vishing,
       behavioral profiling by ad-tech, and the slow accretion of data broker
-      records. All offline by default. No accounts. No telemetry.
+      records. Offline by default where it makes sense. No accounts. No
+      telemetry.
     </p>
   </section>
 
-  <section class="grid" aria-label="Apps">
-    {apps.map((app) => <AppCard app={app} />)}
-  </section>
+  <div class="split">
+    <section class="col col-software" aria-label="Software">
+      <h2 class="col-head">Tools</h2>
+      <div class="list">
+        {tools.map((p) => <ProjectCard project={p} />)}
+      </div>
+      <h2 class="col-head">Research</h2>
+      <div class="list">
+        {research.map((p) => <ProjectCard project={p} />)}
+      </div>
+    </section>
+
+    <section class="col col-apps" aria-label="Apps">
+      <h2 class="col-head">Apps</h2>
+      <div class="list">
+        {apps.map((app) => <AppCard app={app} />)}
+      </div>
+    </section>
+  </div>
 
   <section class="fine-print">
     <p>
-      Each app's source, license, and privacy notes live in its GitHub
+      Each project's source, license, and notes live in its GitHub
       repository. Questions, issues, and contributions are welcome there.
     </p>
   </section>
@@ -40,7 +63,7 @@ const description =
   .hero {
     max-width: var(--w-content);
     margin: 0 auto;
-    padding: 3rem 0 2.5rem;
+    padding: 2.5rem 0 2rem;
   }
 
   .eyebrow {
@@ -57,24 +80,46 @@ const description =
   }
 
   .lead {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     line-height: 1.7;
     color: var(--text);
     max-width: 62ch;
   }
 
-  .grid {
+  .split {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
     padding: 1rem 0 3rem;
   }
 
-  @media (min-width: 720px) {
-    .grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.25rem;
-    }
+  .col {
+    min-width: 0;
+  }
+
+  .col-head {
+    position: sticky;
+    top: 3.25rem;
+    background: var(--bg);
+    padding: 0.75rem 0;
+    margin: 1.5rem 0 0.75rem;
+    font-size: 0.88rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    z-index: 5;
+  }
+
+  .col-head:first-child {
+    margin-top: 0;
+  }
+
+  .list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
 
   .fine-print {
@@ -82,6 +127,17 @@ const description =
     margin: 0 auto;
     padding: 1rem 0 2rem;
     color: var(--text-muted);
-    font-size: 0.92rem;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 899px) {
+    .split {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .col-head {
+      position: static;
+    }
   }
 </style>

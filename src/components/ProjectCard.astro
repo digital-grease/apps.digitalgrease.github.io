@@ -1,0 +1,130 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { name, tagline, repo, stack, license, status, accent } = project.data;
+---
+
+<a
+  class="project-card"
+  href={repo}
+  rel="noopener"
+  aria-label={`${name} — ${tagline}`}
+  style={accent ? `--project-accent: ${accent};` : undefined}
+>
+  <div class="accent-bar" aria-hidden="true"></div>
+  <div class="card-head">
+    <h3>{name}</h3>
+    <span class:list={['status', `status-${status}`]}>{status}</span>
+  </div>
+  <p class="tagline">{tagline}</p>
+  <div class="meta">
+    <div class="stack">
+      {stack.map((s) => <span class="chip">{s}</span>)}
+    </div>
+    <span class="license">{license}</span>
+  </div>
+</a>
+
+<style>
+  .project-card {
+    display: block;
+    position: relative;
+    padding: 1rem 1.1rem 0.9rem 1.25rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    overflow: hidden;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    box-shadow: var(--shadow-card);
+  }
+
+  .project-card:hover,
+  .project-card:focus-visible {
+    border-color: var(--project-accent, var(--accent));
+    transform: translateY(-1px);
+  }
+
+  .accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: var(--project-accent, var(--accent));
+    opacity: 0.85;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .card-head h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--project-accent, var(--accent-bright));
+    flex: 1;
+  }
+
+  .status {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+  }
+
+  .status-active { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 35%, var(--border)); }
+  .status-spike { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 35%, var(--border)); }
+  .status-archived { color: var(--text-muted); }
+
+  .tagline {
+    margin: 0 0 0.75rem;
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    flex-wrap: wrap;
+  }
+
+  .stack {
+    display: inline-flex;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .chip {
+    padding: 0.1rem 0.45rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--bg-raised);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .license {
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+</style>

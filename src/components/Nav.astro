@@ -1,9 +1,4 @@
 ---
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
-
-const internal = [
-  { label: 'Apps', href: '/' },
-];
 const external = [
   { label: 'blog', href: 'https://blog.digitalgrease.dev' },
   { label: 'digitalgrease.dev', href: 'https://digitalgrease.dev' },
@@ -12,21 +7,12 @@ const external = [
 
 <header class="site-nav">
   <div class="nav-inner">
-    <a href="/" class="brand" aria-label="apps.digitalgrease home">
+    <a href="/" class="brand" aria-label="digitalgrease home">
       <span class="brand-mark">//</span>
-      <span class="brand-text">apps.digitalgrease</span>
+      <span class="brand-text">digitalgrease</span>
     </a>
 
     <nav class="nav-links" aria-label="Primary">
-      {internal.map((item) => (
-        <a
-          href={item.href}
-          class:list={['nav-link', { active: path === item.href }]}
-        >
-          {item.label}
-        </a>
-      ))}
-      <span class="nav-divider" aria-hidden="true">·</span>
       {external.map((item) => (
         <a href={item.href} class="nav-link external" rel="noopener">
           {item.label}
