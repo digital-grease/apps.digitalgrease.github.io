@@ -1,7 +1,7 @@
 ---
 name: Fauxx
 tagline: Data poisoning for your everyday tracking.
-status: shipping
+status: alpha
 platforms: [android]
 license: AGPL-3.0
 repo: https://github.com/digital-grease/fauxx
@@ -64,6 +64,6 @@ stored or used as steering inputs.
 
 ## Status
 
-**Shipping.** Available as a full build via GitHub Releases and F-Droid.
+**v0.1 alpha.** Available as a full build via GitHub Releases and F-Droid.
 A reduced Play Store build without location spoofing and ad-profile
 pollution (excluded by Play's policies) is distributed separately.
