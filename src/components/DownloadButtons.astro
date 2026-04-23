@@ -1,0 +1,70 @@
+---
+interface Downloads {
+  github?: string;
+  play?: string;
+  fdroid?: string;
+  izzy?: string;
+}
+
+interface Props {
+  downloads: Downloads;
+}
+
+const { downloads } = Astro.props;
+
+const items = [
+  { key: 'github', label: 'GitHub Releases', url: downloads.github },
+  { key: 'play',   label: 'Google Play',     url: downloads.play },
+  { key: 'fdroid', label: 'F-Droid',         url: downloads.fdroid },
+  { key: 'izzy',   label: 'IzzyOnDroid',     url: downloads.izzy },
+].filter((d) => Boolean(d.url));
+---
+
+{items.length > 0 && (
+  <div class="download-row" role="group" aria-label="Download channels">
+    {items.map((d) => (
+      <a class="download-btn" href={d.url} rel="noopener">
+        {d.label}
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    ))}
+  </div>
+)}
+
+<style>
+  .download-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.5rem;
+  }
+
+  .download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--text);
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: border-color 120ms ease, color 120ms ease, background 120ms ease;
+  }
+
+  .download-btn:hover,
+  .download-btn:focus-visible {
+    color: var(--accent-bright);
+    border-color: var(--accent);
+    background: var(--bg-raised);
+  }
+
+  .arrow {
+    transition: transform 120ms ease;
+  }
+
+  .download-btn:hover .arrow {
+    transform: translateX(3px);
+  }
+</style>

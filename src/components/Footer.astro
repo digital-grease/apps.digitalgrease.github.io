@@ -1,0 +1,45 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <p class="footer-tag">Built by <a href="https://digitalgrease.dev" rel="noopener">digitalgrease</a>.</p>
+    <p class="footer-links">
+      <a href="https://github.com/digital-grease" rel="noopener">GitHub</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://blog.digitalgrease.dev" rel="noopener">Blog</a>
+      <span aria-hidden="true">·</span>
+      <a href="https://digitalgrease.dev" rel="noopener">Homepage</a>
+    </p>
+    <p class="footer-copy">&copy; {year} Digital Grease. Each app's license governs its use — see repo.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 1.5rem 3rem;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+
+  .footer-inner {
+    max-width: var(--w-wide);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    align-items: flex-start;
+  }
+
+  .footer-links {
+    display: inline-flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .footer-copy {
+    margin-top: 0.4rem;
+  }
+</style>

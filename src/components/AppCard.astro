@@ -1,0 +1,104 @@
+---
+import StatusBadge from './StatusBadge.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  app: CollectionEntry<'apps'>;
+}
+
+const { app } = Astro.props;
+const { name, tagline, status, license, accent } = app.data;
+const href = `/${app.id}`;
+---
+
+<a
+  class="app-card"
+  href={href}
+  aria-label={`${name} — ${tagline}`}
+  style={accent ? `--app-accent: ${accent};` : undefined}
+>
+  <div class="accent-bar" aria-hidden="true"></div>
+  <div class="card-head">
+    <h2>{name}</h2>
+    <StatusBadge status={status} />
+  </div>
+  <p class="tagline">{tagline}</p>
+  <p class="meta">
+    <span>{license}</span>
+    <span class="chev" aria-hidden="true">→</span>
+  </p>
+</a>
+
+<style>
+  .app-card {
+    display: block;
+    padding: 1.5rem 1.5rem 1.25rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    box-shadow: var(--shadow-card);
+  }
+
+  .app-card:hover,
+  .app-card:focus-visible {
+    border-color: var(--app-accent, var(--accent));
+    transform: translateY(-2px);
+  }
+
+  .accent-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--app-accent, var(--accent));
+    opacity: 0.9;
+  }
+
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .card-head h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    color: var(--app-accent, var(--accent-bright));
+  }
+
+  .tagline {
+    margin: 0.25rem 0 1.25rem;
+    color: var(--text);
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  .chev {
+    color: var(--app-accent, var(--accent));
+    font-weight: 700;
+    transition: transform 180ms ease;
+  }
+
+  .app-card:hover .chev {
+    transform: translateX(4px);
+  }
+</style>

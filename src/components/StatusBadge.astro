@@ -1,0 +1,46 @@
+---
+interface Props {
+  status: 'shipping' | 'pre-release' | 'alpha';
+}
+
+const { status } = Astro.props;
+
+const label = {
+  'shipping': 'Shipping',
+  'pre-release': 'Pre-release',
+  'alpha': 'Alpha',
+}[status];
+---
+
+<span class:list={['status-badge', `status-${status}`]} aria-label={`Status: ${label}`}>
+  <span class="dot" aria-hidden="true"></span>
+  {label}
+</span>
+
+<style>
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-muted);
+  }
+
+  .dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .status-shipping { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, var(--border)); }
+  .status-pre-release { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, var(--border)); }
+  .status-alpha { color: var(--info); border-color: color-mix(in srgb, var(--info) 40%, var(--border)); }
+</style>

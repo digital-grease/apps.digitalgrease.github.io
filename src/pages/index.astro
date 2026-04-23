@@ -1,45 +1,87 @@
 ---
-const title = 'apps.digitalgrease';
-const description = 'Privacy-first, local-first apps by Digital Grease.';
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AppCard from '../components/AppCard.astro';
+
+const apps = (await getCollection('apps')).sort(
+  (a, b) => (a.data.order ?? 0) - (b.data.order ?? 0),
+);
+
+const title = 'apps.digitalgrease — privacy-first, local-first apps';
+const description =
+  'Open-source privacy tools by Digital Grease: Fauxx, Obscura, Effigy, Signet. Local-first, no accounts, no telemetry.';
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-  </head>
-  <body>
-    <main>
-      <h1>apps.digitalgrease</h1>
-      <p>Scaffolding in progress. Real content lands in Phase 2.</p>
-    </main>
-    <style>
-      :root {
-        color-scheme: dark;
-        --bg: #000;
-        --text: #d4d4d4;
-        --accent: #8b7fa8;
-      }
-      html, body {
-        margin: 0;
-        background: var(--bg);
-        color: var(--text);
-        font-family: ui-monospace, 'Courier New', monospace;
-      }
-      main {
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 4rem 1.5rem;
-      }
-      h1 {
-        color: var(--accent);
-        font-weight: 700;
-        letter-spacing: 0.02em;
-      }
-    </style>
-  </body>
-</html>
+<BaseLayout title={title} description={description}>
+  <section class="hero">
+    <p class="eyebrow">// digitalgrease / apps</p>
+    <h1>Privacy-first, local-first apps.</h1>
+    <p class="lead">
+      A small portfolio of open-source tools for the threat model of
+      <em>now</em> — biographical retrieval by LLMs, voice-deepfake vishing,
+      behavioral profiling by ad-tech, and the slow accretion of data broker
+      records. All offline by default. No accounts. No telemetry.
+    </p>
+  </section>
+
+  <section class="grid" aria-label="Apps">
+    {apps.map((app) => <AppCard app={app} />)}
+  </section>
+
+  <section class="fine-print">
+    <p>
+      Each app's source, license, and privacy notes live in its GitHub
+      repository. Questions, issues, and contributions are welcome there.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 3rem 0 2.5rem;
+  }
+
+  .eyebrow {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 1rem;
+  }
+
+  .hero h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--accent-bright);
+  }
+
+  .lead {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text);
+    max-width: 62ch;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0 3rem;
+  }
+
+  @media (min-width: 720px) {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  .fine-print {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 1rem 0 2rem;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+</style>

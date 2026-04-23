@@ -1,0 +1,150 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import DownloadButtons from '../components/DownloadButtons.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  app: CollectionEntry<'apps'>;
+}
+
+const { app } = Astro.props;
+const {
+  name,
+  tagline,
+  status,
+  platforms,
+  license,
+  repo,
+  privacy,
+  accent,
+  downloads,
+} = app.data;
+
+const pageTitle = `${name} — apps.digitalgrease`;
+---
+
+<BaseLayout title={pageTitle} description={tagline} ogType="article">
+  <article class="app-page" style={accent ? `--app-accent: ${accent};` : undefined}>
+    <header class="app-hero">
+      <div class="hero-top">
+        <h1>{name}</h1>
+        <StatusBadge status={status} />
+      </div>
+      <p class="hero-tagline">{tagline}</p>
+
+      <dl class="hero-meta">
+        <div>
+          <dt>Platforms</dt>
+          <dd>{platforms.join(' · ')}</dd>
+        </div>
+        <div>
+          <dt>License</dt>
+          <dd>{license}</dd>
+        </div>
+        <div>
+          <dt>Source</dt>
+          <dd><a href={repo} rel="noopener">{repo.replace('https://', '')}</a></dd>
+        </div>
+        {privacy && (
+          <div>
+            <dt>Privacy</dt>
+            <dd><a href={privacy} rel="noopener">Privacy notes</a></dd>
+          </div>
+        )}
+      </dl>
+
+      <DownloadButtons downloads={downloads} />
+    </header>
+
+    <div class="app-body">
+      <slot />
+    </div>
+
+    <nav class="app-foot-nav">
+      <a href="/">← All apps</a>
+    </nav>
+  </article>
+</BaseLayout>
+
+<style>
+  .app-page {
+    max-width: var(--w-content);
+    margin: 0 auto;
+  }
+
+  .app-hero {
+    padding: 2rem 0 2.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .app-hero::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 36px;
+    height: 3px;
+    background: var(--app-accent, var(--accent));
+    box-shadow: 0 0 12px var(--app-accent, var(--accent-glow));
+  }
+
+  .hero-top {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.25rem;
+  }
+
+  .hero-top h1 {
+    margin: 0;
+    color: var(--app-accent, var(--accent-bright));
+  }
+
+  .hero-tagline {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin: 0.5rem 0 1.5rem;
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem 1.5rem;
+    margin: 1rem 0 1.75rem;
+    font-size: 0.92rem;
+  }
+
+  .hero-meta div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .hero-meta dt {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.2rem;
+  }
+
+  .hero-meta dd {
+    margin: 0;
+    color: var(--text);
+    word-break: break-word;
+  }
+
+  .app-body :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .app-foot-nav {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+</style>

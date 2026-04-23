@@ -1,0 +1,104 @@
+---
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const internal = [
+  { label: 'Apps', href: '/' },
+];
+const external = [
+  { label: 'blog', href: 'https://blog.digitalgrease.dev' },
+  { label: 'digitalgrease.dev', href: 'https://digitalgrease.dev' },
+];
+---
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="brand" aria-label="apps.digitalgrease home">
+      <span class="brand-mark">//</span>
+      <span class="brand-text">apps.digitalgrease</span>
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      {internal.map((item) => (
+        <a
+          href={item.href}
+          class:list={['nav-link', { active: path === item.href }]}
+        >
+          {item.label}
+        </a>
+      ))}
+      <span class="nav-divider" aria-hidden="true">·</span>
+      {external.map((item) => (
+        <a href={item.href} class="nav-link external" rel="noopener">
+          {item.label}
+          <span class="ext-arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .nav-inner {
+    max-width: var(--w-wide);
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
+    border-bottom: none;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .brand:hover { color: var(--accent-bright); }
+
+  .brand-mark {
+    color: var(--accent);
+  }
+
+  .nav-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 0.92rem;
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    border-bottom: none;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    color: var(--accent-bright);
+  }
+
+  .nav-divider {
+    color: var(--border);
+  }
+
+  .ext-arrow {
+    font-size: 0.8em;
+    margin-left: 0.2em;
+    opacity: 0.6;
+  }
+</style>
