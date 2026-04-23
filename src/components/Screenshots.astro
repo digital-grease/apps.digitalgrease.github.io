@@ -1,0 +1,94 @@
+---
+interface Shot {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  shots: Shot[];
+  appName: string;
+}
+
+const { shots, appName } = Astro.props;
+if (shots.length === 0) return null;
+---
+
+<section class="screens" aria-label={`${appName} screenshots`}>
+  <h2>Screens</h2>
+  <div class="strip" role="list">
+    {shots.map((s, i) => (
+      <figure role="listitem" class="shot">
+        <img
+          src={s.src}
+          alt={s.alt}
+          width="270"
+          height="600"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          decoding="async"
+        />
+      </figure>
+    ))}
+  </div>
+</section>
+
+<style>
+  .screens {
+    margin: 2.5rem 0 1rem;
+  }
+
+  .screens h2 {
+    margin-top: 0;
+  }
+
+  .strip {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 1rem;
+    padding: 0.5rem 0.25rem 1.25rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-color: var(--accent) transparent;
+    scrollbar-width: thin;
+  }
+
+  .strip::-webkit-scrollbar {
+    height: 8px;
+  }
+  .strip::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .strip::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+
+  .shot {
+    margin: 0;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-card);
+    transition: border-color 160ms ease, transform 160ms ease;
+  }
+
+  .shot:hover {
+    border-color: var(--app-accent, var(--accent));
+    transform: translateY(-2px);
+  }
+
+  .shot img {
+    display: block;
+    width: 270px;
+    height: auto;
+    max-height: 600px;
+  }
+
+  @media (max-width: 520px) {
+    .shot img {
+      width: 230px;
+    }
+  }
+</style>

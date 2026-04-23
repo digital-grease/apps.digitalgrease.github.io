@@ -3,12 +3,29 @@ name: Signet
 tagline: Cryptographic multi-factor authentication for human relationships.
 status: alpha
 platforms: [android]
-license: GPL-3.0
+license: AGPL-3.0
 repo: https://github.com/digital-grease/signet
 privacy: https://github.com/digital-grease/signet/blob/main/PRIVACY.md
 accent: "#00cccc"
 downloads:
   github: https://github.com/digital-grease/signet/releases
+screenshots:
+  - src: /apps/signet/screens/01-home-paired-list.webp
+    alt: "Home screen with the paired-contacts list."
+  - src: /apps/signet/screens/02-verify-show-my-words.webp
+    alt: "Verify screen showing the user's own current 4 BIP-39 words, so they can read them aloud to a caller."
+  - src: /apps/signet/screens/03-verify-not-verified.webp
+    alt: "Verify screen with a red rejection banner after an incorrect 4-word code."
+  - src: /apps/signet/screens/04-pair-modes-sheet.webp
+    alt: "Pair modes bottom sheet — in-person QR, long-distance transport package, and rekey options."
+  - src: /apps/signet/screens/05-pair-qr-display.webp
+    alt: "Pairing QR code display for in-person two-phone exchange."
+  - src: /apps/signet/screens/06-transport-package-share.webp
+    alt: "Transport package share sheet — encrypted long-distance pairing or lost-phone recovery payload."
+  - src: /apps/signet/screens/07-peer-actions-menu.webp
+    alt: "Per-peer actions menu — label, inspect, rekey, unpair."
+  - src: /apps/signet/screens/08-liveness-challenge.webp
+    alt: "Liveness challenge — a randomly generated physical prompt for video-call verification."
 order: 4
 ---
 

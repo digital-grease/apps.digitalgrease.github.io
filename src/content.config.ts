@@ -22,6 +22,14 @@ const apps = defineCollection({
       })
       .partial()
       .default({}),
+    screenshots: z
+      .array(
+        z.object({
+          src: z.string(),
+          alt: z.string(),
+        }),
+      )
+      .default([]),
     order: z.number().default(0),
   }),
 });

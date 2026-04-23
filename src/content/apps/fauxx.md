@@ -9,6 +9,17 @@ privacy: https://github.com/digital-grease/fauxx/blob/main/PRIVACY.md
 accent: "#00cc66"
 downloads:
   github: https://github.com/digital-grease/fauxx/releases
+screenshots:
+  - src: /apps/fauxx/screens/01-dashboard.webp
+    alt: "Dashboard — active status, daily and weekly action counts, category distribution donut, current synthetic persona, and noise ratio."
+  - src: /apps/fauxx/screens/02-targeting-engine.webp
+    alt: "Targeting Engine — toggles for Layer 1 (self-report), Layer 2 (adversarial scraper), Layer 3 (persona rotation); custom-interest entry; per-category weight bars."
+  - src: /apps/fauxx/screens/03-modules.webp
+    alt: "Modules — seven poison modules (Search Poisoning, Cookie Saturation, DNS Noise, Fingerprint Rotation, Ad Pollution, Location Spoofing, App Signals), each with an individual toggle."
+  - src: /apps/fauxx/screens/04-action-log.webp
+    alt: "Action Log — a scrollable, filterable list of timestamped actions the engine has taken (search queries, cookie hits, fingerprint rotations, URLs visited)."
+  - src: /apps/fauxx/screens/05-settings.webp
+    alt: "Settings — intensity (Low/Medium/High at 200 actions/hour), Wi-Fi-only toggle, battery pause threshold, active-hours window, destructive data-wipe."
 order: 1
 ---
 

@@ -2,6 +2,7 @@
 import BaseLayout from './BaseLayout.astro';
 import StatusBadge from '../components/StatusBadge.astro';
 import DownloadButtons from '../components/DownloadButtons.astro';
+import Screenshots from '../components/Screenshots.astro';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
@@ -20,6 +21,7 @@ const {
   accent,
   icon,
   downloads,
+  screenshots,
 } = app.data;
 
 const pageTitle = `${name} — apps.digitalgrease`;
@@ -65,6 +67,8 @@ const iconSrc = icon ?? `/apps/${app.id}/icon.png`;
     <div class="app-body">
       <slot />
     </div>
+
+    <Screenshots shots={screenshots} appName={name} />
 
     <nav class="app-foot-nav">
       <a href="/">← All apps</a>
