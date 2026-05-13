@@ -1,6 +1,6 @@
 ---
 interface Props {
-  status: 'shipping' | 'pre-release' | 'alpha';
+  status: 'shipping' | 'pre-release' | 'beta' | 'alpha';
 }
 
 const { status } = Astro.props;
@@ -8,6 +8,7 @@ const { status } = Astro.props;
 const label = {
   'shipping': 'Shipping',
   'pre-release': 'Pre-release',
+  'beta': 'Beta',
   'alpha': 'Alpha',
 }[status];
 ---
@@ -42,5 +43,6 @@ const label = {
 
   .status-shipping { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, var(--border)); }
   .status-pre-release { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 40%, var(--border)); }
+  .status-beta { color: var(--accent-bright); border-color: color-mix(in srgb, var(--accent-bright) 40%, var(--border)); }
   .status-alpha { color: var(--info); border-color: color-mix(in srgb, var(--info) 40%, var(--border)); }
 </style>

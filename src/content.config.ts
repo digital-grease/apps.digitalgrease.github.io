@@ -6,7 +6,7 @@ const apps = defineCollection({
   schema: z.object({
     name: z.string(),
     tagline: z.string(),
-    status: z.enum(['shipping', 'pre-release', 'alpha']),
+    status: z.enum(['shipping', 'pre-release', 'beta', 'alpha']),
     platforms: z.array(z.enum(['android', 'ios'])),
     license: z.string(),
     repo: z.string().url(),

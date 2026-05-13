@@ -1,7 +1,7 @@
 ---
 name: Fauxx
 tagline: Data poisoning for your everyday tracking.
-status: alpha
+status: beta
 platforms: [android]
 license: AGPL-3.0
 repo: https://github.com/digital-grease/fauxx
@@ -9,6 +9,7 @@ privacy: https://github.com/digital-grease/fauxx/blob/main/PRIVACY.md
 accent: "#00cc66"
 downloads:
   github: https://github.com/digital-grease/fauxx/releases
+  fdroid: https://f-droid.org/packages/com.fauxx.full/
 screenshots:
   - src: /apps/fauxx/screens/01-dashboard.webp
     alt: "Dashboard — active status, daily and weekly action counts, category distribution donut, current synthetic persona, and noise ratio."
@@ -64,6 +65,6 @@ stored or used as steering inputs.
 
 ## Status
 
-**v0.1 alpha.** Available as a full build via GitHub Releases and F-Droid.
+**Beta.** Available as a full build via GitHub Releases and F-Droid.
 A reduced Play Store build without location spoofing and ad-profile
 pollution (excluded by Play's policies) is distributed separately.
