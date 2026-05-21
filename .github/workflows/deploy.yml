@@ -27,6 +27,12 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
 
+      - name: Upgrade npm (cooldown support)
+        # npm 11.10+ honors min-release-age from .npmrc. setup-node@v4
+        # ships npm 10.x with current LTS, so upgrade explicitly.
+        # See ../../COOLDOWNS.md.
+        run: npm install -g 'npm@>=11.10'
+
       - name: Install dependencies
         run: npm ci
 
