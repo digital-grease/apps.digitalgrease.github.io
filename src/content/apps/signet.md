@@ -1,7 +1,7 @@
 ---
 name: Signet
 tagline: Cryptographic multi-factor authentication for human relationships.
-status: alpha
+status: beta
 platforms: [android]
 license: AGPL-3.0
 repo: https://github.com/digital-grease/signet
@@ -9,6 +9,7 @@ privacy: https://github.com/digital-grease/signet/blob/main/PRIVACY.md
 accent: "#00cccc"
 downloads:
   github: https://github.com/digital-grease/signet/releases
+  fdroid: https://f-droid.org/packages/dev.digitalgrease.signet/
 screenshots:
   - src: /apps/signet/screens/01-home-paired-list.webp
     alt: "Home screen with the paired-contacts list."
@@ -77,8 +78,8 @@ words are phonetically distinct by design.
 
 ## Status
 
-**v0.1 alpha, Android only.** Built on Flutter for future cross-platform
-support; iOS is generated but not tested in this release. v0.2 work
-(multi-peer, long-distance pairing, lost-phone recovery, challenge-response
-grid, liveness prompts) is landed in the codebase but not yet
-store-packaged.
+**Beta, Android only.** Available via GitHub Releases and F-Droid. Built
+on Flutter for future cross-platform support; iOS is generated but not
+tested in this release. v0.2 work (multi-peer, long-distance pairing,
+lost-phone recovery, challenge-response grid, liveness prompts) is landed
+in the codebase but not yet store-packaged.
