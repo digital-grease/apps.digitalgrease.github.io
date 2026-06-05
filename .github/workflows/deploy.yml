@@ -1,4 +1,8 @@
-name: Deploy Astro to GitHub Pages
+name: Build and publish deploy artifact
+
+# Pull model: CI builds and publishes a tarball to a rolling 'deploy' release
+# using the ephemeral GITHUB_TOKEN. The VPS pulls + verifies it (see
+# vps-edge/pull/). No SSH key or long-lived secret is stored in GitHub.
 
 on:
   push:
@@ -6,16 +10,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write   # create/update the rolling 'deploy' release
 
 concurrency:
-  group: pages
+  group: deploy-artifact
   cancel-in-progress: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -39,18 +41,17 @@ jobs:
       - name: Build with Astro
         run: npx astro build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist
+      - name: Package artifact
+        run: |
+          tar -czf "$RUNNER_TEMP/site.tar.gz" -C dist .
+          sha256sum "$RUNNER_TEMP/site.tar.gz" | awk '{print $1}' > "$RUNNER_TEMP/site.tar.gz.sha256"
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish to rolling 'deploy' release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view deploy >/dev/null 2>&1 || \
+            gh release create deploy --title "Deploy artifact" \
+              --notes "Rolling build artifact pulled by the VPS." --latest=false
+          gh release upload deploy \
+            "$RUNNER_TEMP/site.tar.gz" "$RUNNER_TEMP/site.tar.gz.sha256" --clobber
