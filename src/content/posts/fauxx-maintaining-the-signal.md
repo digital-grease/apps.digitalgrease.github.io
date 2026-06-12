@@ -4,7 +4,6 @@ description: "Three months and three releases after launching Fauxx, the most in
 date: 2026-06-11
 category: Digital
 tags:
-  - engineering
   - privacy
 authors:
   - digitalgrease

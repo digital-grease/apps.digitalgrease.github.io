@@ -5,7 +5,6 @@ date: 2026-04-26
 category: Digital
 tags:
   - ai
-  - engineering
   - transparency
 authors:
   - digitalgrease

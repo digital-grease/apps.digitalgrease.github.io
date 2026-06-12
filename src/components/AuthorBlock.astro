@@ -30,6 +30,7 @@ const people = getAuthors(authors);
         </div>
       </div>
     ))}
+    <p class="author__more"><a href="/about">More about The Forge →</a></p>
   </aside>
 )}
 
@@ -68,4 +69,11 @@ const people = getAuthors(authors);
     color: var(--text-muted);
     font-size: 0.9rem;
   }
+
+  .author__more {
+    margin: 0.75rem 0 0;
+    font-size: 0.85rem;
+  }
+  .author__more a { color: var(--accent); border-bottom: none; }
+  .author__more a:hover { color: var(--accent-bright); }
 </style>

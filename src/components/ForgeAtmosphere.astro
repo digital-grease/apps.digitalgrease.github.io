@@ -167,4 +167,10 @@ const EMBERS = [
     .fx-sweep,
     .ember-container { display: none; }
   }
+
+  /* Thin the atmosphere on phones — embers + sweep are the heaviest layers. */
+  @media (max-width: 600px) {
+    .ember-container,
+    .fx-sweep { display: none; }
+  }
 </style>

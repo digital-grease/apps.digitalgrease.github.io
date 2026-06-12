@@ -1,18 +1,22 @@
 ---
+import { APPS_ORIGIN } from '../lib/site';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   project: CollectionEntry<'projects'>;
+  crossHost?: boolean; // true on the blog → link to the project's apps-subdomain page
 }
 
-const { project } = Astro.props;
-const { name, tagline, repo, stack, license, status, accent } = project.data;
+const { project, crossHost = false } = Astro.props;
+const { name, tagline, stack, license, status, accent } = project.data;
+// Links to the on-site project page (which carries the GitHub "Source ↗" link),
+// not straight to the repo. Cross-host from the blog resolves to the apps origin.
+const href = crossHost ? new URL(`/${project.id}`, APPS_ORIGIN).href : `/${project.id}`;
 ---
 
 <a
   class="project-card"
-  href={repo}
-  rel="noopener"
+  href={href}
   aria-label={`${name} — ${tagline}`}
   style={accent ? `--project-accent: ${accent};` : undefined}
 >
@@ -26,7 +30,7 @@ const { name, tagline, repo, stack, license, status, accent } = project.data;
     <div class="stack">
       {stack.map((s) => <span class="chip">{s}</span>)}
     </div>
-    <span class="license">{license}</span>
+    <span class="license">{license}{crossHost ? ' ↗' : ''}</span>
   </div>
 </a>
 

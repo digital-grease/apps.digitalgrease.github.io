@@ -1,12 +1,13 @@
 ---
 // The blog landing, served at blog.digitalgrease.dev/ via a Caddy rewrite to
-// /blog-home.html (apps owns the dist root /). Forge-hero + Digital/Analog tiles
-// + recent posts; the full archive lives at /posts.
+// /blog-home.html. Forge-hero + Digital/Analog tiles (with honest post counts) +
+// a cross-axis recent feed; the full archive lives at /posts.
 import BlogBaseLayout from '../layouts/BlogBaseLayout.astro';
 import PostCard from '../components/PostCard.astro';
-import { getPublishedPosts } from '../lib/posts';
+import { getHomeFeed, getCategoryCounts } from '../lib/posts';
 
-const recent = (await getPublishedPosts()).slice(0, 4);
+const recent = await getHomeFeed(4);
+const counts = await getCategoryCounts();
 const title = 'The Forge — digitalgrease';
 const description =
   'Notes from the overlap between servers and steel, code and craft. Chasing a clean signal in the noise.';
@@ -17,6 +18,10 @@ const description =
     <p class="eyebrow">// digitalgrease / the forge</p>
     <h1>The Forge</h1>
     <p class="lead">{description}</p>
+    <p class="who">
+      By digitalgrease: security engineer, maker, homesteader.
+      <a href="/about">Read the story →</a>
+    </p>
   </section>
 
   <figure class="forge-hero">
@@ -33,11 +38,13 @@ const description =
     <a class="axis-tile" data-cat="Digital" href="/category/digital">
       <span class="axis-icon" aria-hidden="true">☠</span>
       <span class="axis-name">Digital</span>
+      <span class="axis-count">{counts.Digital} post{counts.Digital === 1 ? '' : 's'}</span>
       <span class="axis-blurb">Security research, offensive tooling, engineering write-ups. The work that lives in terminals and threat models.</span>
     </a>
     <a class="axis-tile" data-cat="Analog" href="/category/analog">
       <span class="axis-icon" aria-hidden="true">🔥</span>
       <span class="axis-name">Analog</span>
+      <span class="axis-count">{counts.Analog} post{counts.Analog === 1 ? '' : 's'}</span>
       <span class="axis-blurb">Blacksmithing, farming, building things with your hands. The work after the screen goes dark and the forge starts to glow.</span>
     </a>
   </section>
@@ -50,6 +57,10 @@ const description =
     <div class="post-list">
       {recent.map((p) => <PostCard entry={p} />)}
     </div>
+    <p class="apps-ref">
+      Building things, not just writing about them. Tools &amp; apps live at
+      <a href="https://apps.digitalgrease.dev">apps.digitalgrease.dev ↗</a>.
+    </p>
   </section>
 </BlogBaseLayout>
 
@@ -74,7 +85,16 @@ const description =
     line-height: 1.7;
     color: var(--text);
     max-width: 60ch;
+    margin: 0;
   }
+
+  .who {
+    margin: 0.85rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .who a { color: var(--accent); border-bottom: none; white-space: nowrap; }
+  .who a:hover { color: var(--accent-bright); }
 
   .forge-hero { max-width: var(--w-content); margin-inline: auto; }
 
@@ -88,8 +108,8 @@ const description =
 
   .axis-tile {
     display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: 'icon name' 'blurb blurb';
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'icon name count' 'blurb blurb blurb';
     gap: 0.25rem 0.75rem;
     padding: 1.25rem 1.4rem;
     border: 1px solid currentColor;
@@ -114,6 +134,13 @@ const description =
     letter-spacing: 2px;
     font-size: 1.05rem;
   }
+  .axis-count {
+    grid-area: count;
+    align-self: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
   .axis-blurb { grid-area: blurb; color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; }
 
   .recent { max-width: var(--w-content); margin: 2.5rem auto 0; }
@@ -132,6 +159,14 @@ const description =
   .all-link:hover { color: var(--accent-bright); }
 
   .post-list { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+
+  .apps-ref {
+    margin: 1.5rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .apps-ref a { color: var(--accent); border-bottom: none; }
+  .apps-ref a:hover { color: var(--accent-bright); }
 
   @media (max-width: 720px) {
     .dichotomy { grid-template-columns: 1fr; }

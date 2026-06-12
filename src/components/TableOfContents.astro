@@ -1,0 +1,55 @@
+---
+// In-post table of contents for heading-rich longreads. Fed the post's headings
+// from render() (their slug ids already exist on the rendered <h2>s). Only renders
+// when there are enough H2 sections to be worth it.
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const items = headings.filter((h) => h.depth === 2);
+const show = items.length >= 3;
+---
+
+{show && (
+  <nav class="toc" aria-label="Table of contents" data-pagefind-ignore>
+    <p class="toc-head">// contents</p>
+    <ol>
+      {items.map((h) => (
+        <li><a href={`#${h.slug}`}>{h.text}</a></li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .toc {
+    margin: 0 0 2.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+  }
+  .toc-head {
+    margin: 0 0 0.6rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+  }
+  .toc ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .toc li { font-size: 0.92rem; }
+  .toc a { color: var(--text); border-bottom: none; }
+  .toc a:hover { color: var(--accent-bright); }
+</style>

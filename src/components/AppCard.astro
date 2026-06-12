@@ -1,14 +1,18 @@
 ---
 import StatusBadge from './StatusBadge.astro';
+import { APPS_ORIGIN } from '../lib/site';
 import type { CollectionEntry } from 'astro:content';
 
 interface Props {
   app: CollectionEntry<'apps'>;
+  crossHost?: boolean; // true when rendered on the blog → resolve to the apps origin
 }
 
-const { app } = Astro.props;
+const { app, crossHost = false } = Astro.props;
 const { name, tagline, status, license, accent, icon } = app.data;
-const href = `/${app.id}`;
+// On the blog host a bare `/${id}` would serve the apps page from the WRONG origin
+// (lean theme, host-confused). Cross-host links resolve against the apps origin.
+const href = crossHost ? new URL(`/${app.id}`, APPS_ORIGIN).href : `/${app.id}`;
 const iconSrc = icon ?? `/apps/${app.id}/icon.png`;
 ---
 
@@ -27,7 +31,7 @@ const iconSrc = icon ?? `/apps/${app.id}/icon.png`;
   <p class="tagline">{tagline}</p>
   <p class="meta">
     <span>{license}</span>
-    <span class="chev" aria-hidden="true">→</span>
+    <span class="chev" aria-hidden="true">{crossHost ? '↗' : '→'}</span>
   </p>
 </a>
 

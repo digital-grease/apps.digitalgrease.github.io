@@ -4,7 +4,6 @@ description: "If you can't stop ad networks from collecting your data, make what
 date: 2026-03-22
 category: Digital
 tags:
-  - engineering
   - privacy
 authors:
   - digitalgrease

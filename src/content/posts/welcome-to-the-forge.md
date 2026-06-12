@@ -4,7 +4,7 @@ description: "The inaugural post: what this blog is about and what to expect."
 date: 2025-11-14
 category: Digital
 tags:
-  - digital-prose
+  - essay
 authors:
   - digitalgrease
 comments: false

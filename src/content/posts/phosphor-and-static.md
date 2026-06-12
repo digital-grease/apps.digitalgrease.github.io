@@ -4,7 +4,7 @@ description: "On CRT glow, LAN parties, and the quality of attention we lost whe
 date: 2026-03-24
 category: Digital
 tags:
-  - digital-prose
+  - essay
   - retro-tech
   - culture
 authors:

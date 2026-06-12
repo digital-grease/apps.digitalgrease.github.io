@@ -3,13 +3,16 @@ import BaseLayout from './BaseLayout.astro';
 import StatusBadge from '../components/StatusBadge.astro';
 import DownloadButtons from '../components/DownloadButtons.astro';
 import Screenshots from '../components/Screenshots.astro';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { BLOG_ORIGIN } from '../lib/site';
 
 interface Props {
   app: CollectionEntry<'apps'>;
 }
 
 const { app } = Astro.props;
+// Reverse link: posts that declared `app: <this id>`.
+const writeups = (await getCollection('posts')).filter((p) => p.data.app === app.id);
 const {
   name,
   tagline,
@@ -69,6 +72,17 @@ const iconSrc = icon ?? `/apps/${app.id}/icon.png`;
     </div>
 
     <Screenshots shots={screenshots} appName={name} />
+
+    {writeups.length > 0 && (
+      <aside class="writeups">
+        <p class="writeups-head">// written about on The Forge</p>
+        <ul>
+          {writeups.map((post) => (
+            <li><a href={`${BLOG_ORIGIN}/posts/${post.id}`}>{post.data.title} ↗</a></li>
+          ))}
+        </ul>
+      </aside>
+    )}
 
     <nav class="app-foot-nav">
       <a href="/">← All apps</a>
@@ -165,6 +179,15 @@ const iconSrc = icon ?? `/apps/${app.id}/icon.png`;
   .app-body :global(h2:first-child) {
     margin-top: 0;
   }
+
+  .writeups {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .writeups-head { color: var(--text-muted); font-size: 0.82rem; letter-spacing: 0.08em; margin: 0 0 0.6rem; }
+  .writeups ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+  .writeups a { color: var(--accent-bright); }
 
   .app-foot-nav {
     margin-top: 3rem;

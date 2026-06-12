@@ -3,21 +3,25 @@ import BlogBaseLayout from './BlogBaseLayout.astro';
 import Comments from '../components/Comments.astro';
 import AppCard from '../components/AppCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
 import SeriesNav from '../components/SeriesNav.astro';
+import TableOfContents from '../components/TableOfContents.astro';
 import AuthorBlock from '../components/AuthorBlock.astro';
 import { getEntry, type CollectionEntry } from 'astro:content';
-import { readingTime, formatDate, getAdjacent } from '../lib/posts';
+import { readingTime, formatDate, getAdjacent, getRelated } from '../lib/posts';
 
 interface Props {
   entry: CollectionEntry<'posts'>;
+  headings?: { depth: number; slug: string; text: string }[];
 }
 
-const { entry } = Astro.props;
+const { entry, headings = [] } = Astro.props;
 const { title, description, date, category, tags, comments, app, project, series, seriesPart, authors } = entry.data;
 const minutes = readingTime(entry);
 const linkedApp = app ? await getEntry('apps', app) : undefined;
 const linkedProject = project ? await getEntry('projects', project) : undefined;
 const { newer, older } = await getAdjacent(entry);
+const related = await getRelated(entry, 3);
 ---
 
 <BlogBaseLayout
@@ -28,6 +32,11 @@ const { newer, older } = await getAdjacent(entry);
 >
   <article class="post" data-pagefind-body>
     <header class="post-hero">
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="/">The Forge</a>
+        <span aria-hidden="true">/</span>
+        <a href={`/category/${category.toLowerCase()}`}>{category}</a>
+      </nav>
       <p class="eyebrow">
         <a class="cat-pill" data-cat={category} href={`/category/${category.toLowerCase()}`}>
           <span class="cat-pill__icon" aria-hidden="true">{category === 'Digital' ? '☠' : '🔥'}</span>
@@ -54,6 +63,8 @@ const { newer, older } = await getAdjacent(entry);
       </div>
     )}
 
+    <TableOfContents headings={headings} />
+
     <div class="post-body">
       <slot />
     </div>
@@ -65,15 +76,24 @@ const { newer, older } = await getAdjacent(entry);
     {linkedApp && (
       <aside class="related" aria-label="The app this post is about" data-pagefind-ignore>
         <p class="related-head">// the app this is about</p>
-        <AppCard app={linkedApp} />
+        <AppCard app={linkedApp} crossHost />
       </aside>
     )}
 
     {linkedProject && (
       <aside class="related" aria-label="The project this post is about" data-pagefind-ignore>
         <p class="related-head">// the project this is about</p>
-        <ProjectCard project={linkedProject} />
+        <ProjectCard project={linkedProject} crossHost />
       </aside>
+    )}
+
+    {related.length > 0 && (
+      <section class="related-posts" aria-label="Related posts" data-pagefind-ignore>
+        <p class="related-head">// read next</p>
+        <div class="related-list">
+          {related.map((p) => <PostCard entry={p} />)}
+        </div>
+      </section>
     )}
 
     {(newer || older) && (
@@ -186,6 +206,21 @@ const { newer, older } = await getAdjacent(entry);
     letter-spacing: 0.08em;
     margin: 0 0 0.75rem;
   }
+
+  .breadcrumb {
+    display: flex;
+    gap: 0.4rem;
+    margin: 0 0 0.4rem;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+  }
+  .breadcrumb a { color: var(--text-muted); border-bottom: none; }
+  .breadcrumb a:hover { color: var(--accent-bright); }
+
+  .related-posts { margin-top: 3rem; }
+  .related-list { display: grid; grid-template-columns: 1fr; gap: 1rem; }
 
   .post-foot-nav {
     margin-top: 3rem;

@@ -5,7 +5,6 @@ date: 2026-04-19
 category: Digital
 tags:
   - security
-  - engineering
   - ai
 authors:
   - digitalgrease

@@ -4,7 +4,7 @@ description: "From rural dial-up to city tech careers to building a forge on the
 date: 2026-03-24
 category: Analog
 tags:
-  - analog-prose
+  - essay
   - homesteading
   - blacksmithing
 authors:

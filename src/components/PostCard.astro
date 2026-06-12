@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, description, date, category, tags } = entry.data;
+const { title, description, date, category, tags, series, seriesPart } = entry.data;
 const minutes = readingTime(entry);
 ---
 
@@ -21,6 +21,7 @@ const minutes = readingTime(entry);
       <time datetime={date.toISOString()}>{formatDate(date, { year: 'numeric', month: 'short', day: 'numeric' })}</time>
       <span class="dot" aria-hidden="true">·</span>
       <span>{minutes} min</span>
+      {series && <span class="series-badge">◆ {series} · pt {seriesPart}</span>}
     </p>
     <h2>{title}</h2>
     <p class="card-desc">{description}</p>
@@ -108,4 +109,11 @@ const minutes = readingTime(entry);
   }
 
   .tag:hover { color: var(--accent-bright); }
+
+  .series-badge {
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+  }
 </style>
