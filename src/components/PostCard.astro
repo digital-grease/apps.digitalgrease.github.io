@@ -1,0 +1,111 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { readingTime, formatDate } from '../lib/posts';
+
+interface Props {
+  entry: CollectionEntry<'posts'>;
+}
+
+const { entry } = Astro.props;
+const { title, description, date, category, tags } = entry.data;
+const minutes = readingTime(entry);
+---
+
+<article class="post-card">
+  <a class="card-link" href={`/posts/${entry.id}`}>
+    <p class="card-eyebrow">
+      <span class="cat-pill" data-cat={category}>
+        <span class="cat-pill__icon" aria-hidden="true">{category === 'Digital' ? '☠' : '🔥'}</span>
+        <span>{category}</span>
+      </span>
+      <time datetime={date.toISOString()}>{formatDate(date, { year: 'numeric', month: 'short', day: 'numeric' })}</time>
+      <span class="dot" aria-hidden="true">·</span>
+      <span>{minutes} min</span>
+    </p>
+    <h2>{title}</h2>
+    <p class="card-desc">{description}</p>
+  </a>
+  {tags.length > 0 && (
+    <ul class="tag-row">
+      {tags.map((t) => (
+        <li><a class="tag" href={`/tags/${t}`}>#{t}</a></li>
+      ))}
+    </ul>
+  )}
+</article>
+
+<style>
+  .post-card {
+    padding: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    transition: border-color 180ms ease, transform 180ms ease;
+  }
+
+  .post-card:hover,
+  .post-card:focus-within {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+  }
+
+  .card-link {
+    display: block;
+    color: var(--text);
+    border-bottom: none;
+  }
+
+  .card-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+    margin: 0 0 0.6rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+  }
+
+  .card-link h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.3rem;
+    color: var(--accent-bright);
+  }
+
+  .card-desc {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .cat-pill {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    border: 1px solid currentColor;
+  }
+
+  .cat-pill[data-cat='Digital'] { color: var(--info); }
+  .cat-pill[data-cat='Analog'] { color: var(--warn); }
+
+  .tag-row {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 0;
+    padding: 0;
+  }
+
+  .tag {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    border-bottom: none;
+  }
+
+  .tag:hover { color: var(--accent-bright); }
+</style>

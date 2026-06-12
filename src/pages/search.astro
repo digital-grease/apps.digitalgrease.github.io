@@ -1,0 +1,165 @@
+---
+// Forge-styled search over the posts, powered by Pagefind's client JS API.
+// The index lives at /pagefind/ (generated post-build by `pagefind --site dist`),
+// so search only works against a real build, not `astro dev`.
+import BlogBaseLayout from '../layouts/BlogBaseLayout.astro';
+---
+
+<BlogBaseLayout title="Search — The Forge" description="Search the posts.">
+  <section class="search-page">
+    <p class="eyebrow"><a href="/">// the forge</a> / search</p>
+    <h1>Search</h1>
+    <div class="search">
+      <input
+        id="q"
+        type="search"
+        placeholder="search the posts…"
+        autocomplete="off"
+        aria-label="Search posts"
+        autofocus
+      />
+      <p id="status" class="search__status" role="status" aria-live="polite"></p>
+      <ul id="results" class="search__results"></ul>
+    </div>
+  </section>
+</BlogBaseLayout>
+
+<script is:inline>
+  let pagefind;
+  const input = document.getElementById('q');
+  const out = document.getElementById('results');
+  const status = document.getElementById('status');
+
+  async function getPagefind() {
+    if (!pagefind) {
+      pagefind = await import(/* @vite-ignore */ '/pagefind/pagefind.js');
+      await pagefind.init();
+    }
+    return pagefind;
+  }
+
+  let timer;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(run, 200);
+  });
+
+  async function run() {
+    const query = input.value.trim();
+    if (!query) {
+      out.innerHTML = '';
+      status.textContent = '';
+      return;
+    }
+    let pf;
+    try {
+      pf = await getPagefind();
+    } catch {
+      status.textContent = 'Search index unavailable — this needs a production build.';
+      return;
+    }
+    const search = await pf.search(query);
+    const top = await Promise.all(search.results.slice(0, 10).map((r) => r.data()));
+    status.textContent = top.length
+      ? `${search.results.length} result${search.results.length === 1 ? '' : 's'}`
+      : 'No matches.';
+    out.innerHTML = top
+      .map(
+        (d) => `
+        <li class="result">
+          <a href="${d.url}">
+            <span class="result__title">${d.meta?.title ?? d.url}</span>
+            <span class="result__excerpt">${d.excerpt}</span>
+          </a>
+        </li>`,
+      )
+      .join('');
+  }
+
+  const params = new URLSearchParams(location.search);
+  const initial = params.get('q');
+  if (initial) {
+    input.value = initial;
+    run();
+  }
+</script>
+
+<style>
+  .search-page {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 2.5rem 0 3rem;
+  }
+  .eyebrow {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 1rem;
+  }
+  .eyebrow a { color: var(--text-muted); border-bottom: none; }
+  .eyebrow a:hover { color: var(--accent-bright); }
+  .search-page h1 { margin: 0 0 1.5rem; }
+
+  .search input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: var(--bg-raised);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+  }
+  .search input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+  .search input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .search__status {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin: 0.75rem 0 0;
+  }
+
+  .search__results {
+    list-style: none;
+    margin: 1rem 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .result a {
+    display: block;
+    padding: 1rem 1.15rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    transition: border-color 180ms ease;
+  }
+  .result a:hover { border-color: var(--accent); }
+
+  .result__title {
+    display: block;
+    color: var(--accent-bright);
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .result__excerpt {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .result__excerpt :global(mark) {
+    background: rgba(0, 204, 204, 0.22);
+    color: #ffcc66; /* forge-yellow — ≥7:1 on the cyan tint; fixes the AA fail */
+  }
+</style>

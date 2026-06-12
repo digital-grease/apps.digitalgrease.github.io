@@ -1,0 +1,32 @@
+---
+// Blog 404 (forge). Emitted at /blog-404.html; the blog host's Caddy try_files
+// falls back here so blog 404s stay in-theme.
+import BlogBaseLayout from '../layouts/BlogBaseLayout.astro';
+---
+
+<BlogBaseLayout title="404 — signal lost" description="That page doesn't exist." canonicalPath="/404">
+  <section class="notfound">
+    <p class="code">404</p>
+    <h1>Signal Lost</h1>
+    <p>That page doesn't exist, or it decayed like phosphor. The glow moved on.</p>
+    <p class="links"><a href="/">← The Forge</a> <a href="/posts">All posts</a></p>
+  </section>
+</BlogBaseLayout>
+
+<style>
+  .notfound {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 3rem 0;
+    text-align: center;
+  }
+  .code {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 4.5rem;
+    color: var(--cyber-cyan);
+    text-shadow: 0 0 15px rgba(0, 204, 204, 0.7), 0 0 30px rgba(0, 204, 204, 0.4);
+    margin: 0;
+  }
+  .notfound h1 { margin: 0.5rem 0 1rem; }
+  .links { display: flex; gap: 1.5rem; justify-content: center; }
+</style>

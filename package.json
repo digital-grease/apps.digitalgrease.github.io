@@ -6,13 +6,20 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.0.0",
     "@astrojs/mdx": "^4.0.0",
-    "@astrojs/sitemap": "^3.2.0"
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/sitemap": "^3.2.0",
+    "@fontsource/inter": "^5.2.8",
+    "@fontsource/share-tech-mono": "^5.2.7",
+    "astro": "^5.0.0",
+    "astro-og-canvas": "^0.11.1"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

@@ -1,0 +1,67 @@
+---
+// Multi-part series navigation. Derives the part list by querying all published
+// posts that share the same `series` name, sorted by `seriesPart` — so each post
+// only declares its own series + part, no duplicated parts array.
+import { getPublishedPosts } from '../lib/posts';
+
+interface Props {
+  series: string;
+  current: number;
+}
+
+const { series, current } = Astro.props;
+const parts = (await getPublishedPosts())
+  .filter((p) => p.data.series === series)
+  .sort((a, b) => (a.data.seriesPart ?? 0) - (b.data.seriesPart ?? 0));
+---
+
+{parts.length > 1 && (
+  <nav class="series-nav" aria-label={`${series} series`}>
+    <p class="series-head">// {series} · part {current} of {parts.length}</p>
+    <ol>
+      {parts.map((p) => (
+        <li class={p.data.seriesPart === current ? 'is-current' : ''}>
+          {p.data.seriesPart === current ? (
+            <span aria-current="true">{p.data.title}</span>
+          ) : (
+            <a href={`/posts/${p.id}`}>{p.data.title}</a>
+          )}
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+
+<style>
+  .series-nav {
+    margin: 0 0 2rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-raised);
+  }
+
+  .series-head {
+    margin: 0 0 0.6rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+  }
+
+  .series-nav ol {
+    margin: 0;
+    padding-left: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .series-nav li {
+    font-size: 0.95rem;
+  }
+
+  .series-nav li.is-current span {
+    color: var(--accent-bright);
+    font-weight: 700;
+  }
+</style>

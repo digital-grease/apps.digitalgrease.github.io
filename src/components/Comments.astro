@@ -1,0 +1,45 @@
+---
+// Giscus comments via GitHub Discussions.
+//
+// There were no existing comment threads at migration, so comments move to the
+// new repo with simple `pathname` mapping (one thread per post URL, /posts/{slug})
+// — no legacy-term continuity needed, and the old blog repo can be fully retired.
+//
+// SET BEFORE CUTOVER: giscus needs a PUBLIC repo with Discussions enabled + the
+// giscus GitHub App installed. Point data-repo at it and paste the two IDs from
+// https://giscus.app (data-repo-id, data-category-id).
+---
+
+<section class="comments" aria-label="Comments">
+  <h2 id="comments">Comments</h2>
+  <script
+    is:inline
+    src="https://giscus.app/client.js"
+    data-repo="digital-grease/apps.digitalgrease.github.io"
+    data-repo-id="R_kgDOSKEXLQ"
+    data-category="Announcements"
+    data-category-id="DIC_kwDOSKEXLc4C_CgY"
+    data-mapping="pathname"
+    data-strict="1"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="dark_dimmed"
+    data-lang="en"
+    crossorigin="anonymous"
+    async></script>
+</section>
+
+<style>
+  .comments {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .comments h2 {
+    font-size: 1.1rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+</style>

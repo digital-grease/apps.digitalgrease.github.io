@@ -1,6 +1,12 @@
 ---
+// Apps nav. The blog is a sibling subdomain, so it's an absolute cross-link.
+import { BLOG_ORIGIN } from '../lib/site';
+
+const internal = [
+  { label: 'apps', href: '/' },
+];
 const external = [
-  { label: 'blog', href: 'https://blog.digitalgrease.dev' },
+  { label: 'blog', href: BLOG_ORIGIN },
   { label: 'digitalgrease.dev', href: 'https://digitalgrease.dev' },
 ];
 ---
@@ -13,6 +19,9 @@ const external = [
     </a>
 
     <nav class="nav-links" aria-label="Primary">
+      {internal.map((item) => (
+        <a href={item.href} class="nav-link">{item.label}</a>
+      ))}
       {external.map((item) => (
         <a href={item.href} class="nav-link external" rel="noopener">
           {item.label}

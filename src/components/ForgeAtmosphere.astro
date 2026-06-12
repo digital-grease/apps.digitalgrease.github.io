@@ -1,0 +1,170 @@
+---
+// Fixed, full-viewport atmospheric layers for the forge theme — ported from
+// forge-effects.css (scanlines, vignette) and forge-home.css (floor glow, sweep,
+// embers). All pointer-events:none and behind/over the content panel as needed.
+// Embers are static divs (the mkdocs site had no JS either); positions/timings are
+// hand-varied and deterministic so builds are reproducible.
+const EMBERS = [
+  { left: 6, size: 5, delay: 0, dur: 11 },
+  { left: 14, size: 3, delay: 3.5, dur: 14 },
+  { left: 22, size: 6, delay: 7, dur: 9.5 },
+  { left: 30, size: 4, delay: 1.5, dur: 13 },
+  { left: 38, size: 3, delay: 9, dur: 12 },
+  { left: 45, size: 5, delay: 5, dur: 10.5 },
+  { left: 53, size: 4, delay: 2.5, dur: 15 },
+  { left: 60, size: 6, delay: 8, dur: 9 },
+  { left: 67, size: 3, delay: 4, dur: 13.5 },
+  { left: 74, size: 5, delay: 11, dur: 11.5 },
+  { left: 81, size: 4, delay: 6, dur: 12.5 },
+  { left: 88, size: 3, delay: 1, dur: 14.5 },
+  { left: 94, size: 5, delay: 9.5, dur: 10 },
+  { left: 18, size: 4, delay: 12.5, dur: 13 },
+  { left: 50, size: 3, delay: 10, dur: 16 },
+  { left: 78, size: 6, delay: 2, dur: 9.5 },
+];
+---
+
+<div class="forge-atmosphere" aria-hidden="true">
+  <div class="fx-floor"></div>
+  <div class="fx-vignette"></div>
+  <div class="fx-scanlines"></div>
+  <div class="fx-sweep"></div>
+  <div class="ember-container">
+    {EMBERS.map((e, i) => (
+      <span
+        class={`ember ${i % 2 === 0 ? 'ember--a' : 'ember--b'}`}
+        style={`left:${e.left}%;width:${e.size}px;height:${e.size}px;animation-delay:${e.delay}s,${e.delay}s;animation-duration:${e.dur}s,3s;`}
+      ></span>
+    ))}
+  </div>
+</div>
+
+<style>
+  /* Floor glow — orange heat rising from the bottom (forge-base body::before). */
+  .fx-floor {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(
+      ellipse at bottom,
+      rgba(255, 102, 0, 0.25) 0%,
+      rgba(255, 80, 20, 0.15) 25%,
+      rgba(255, 60, 0, 0.08) 50%,
+      transparent 80%
+    );
+  }
+
+  /* Dark vignette (forge-effects .md-main::after). */
+  .fx-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 998;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      transparent 50%,
+      rgba(0, 0, 0, 0.4) 85%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+  }
+
+  /* Scanline grid (forge-effects .md-main::before). */
+  .fx-scanlines {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 204, 204, 0.015) 0px,
+      transparent 2px,
+      transparent 4px
+    );
+    animation: forge-scanline-drift 20s ease-in-out infinite, forge-ambient-pulse 8s ease-in-out infinite;
+  }
+
+  /* Sweeping cyan line (forge-home .forge-scanline). */
+  .fx-sweep {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.6;
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 255, 255, 0.5) 50%, transparent 100%);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+    animation: forge-scanline-sweep 6s ease-in-out infinite;
+  }
+
+  /* Rising embers (forge-home .ember-container / .ember). */
+  .ember-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .ember {
+    position: absolute;
+    bottom: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--forge-yellow) 0%, var(--forge-orange) 50%, transparent 100%);
+    animation-name: forge-ember-rise, forge-ember-glow;
+    animation-timing-function: ease-out, ease-in-out;
+    animation-iteration-count: infinite, infinite;
+  }
+
+  .ember--b {
+    animation-name: forge-ember-rise-alt, forge-ember-glow;
+  }
+
+  @keyframes forge-scanline-drift {
+    0%, 100% { background-position: 0 0; }
+    50% { background-position: 50px 50px; }
+  }
+
+  @keyframes forge-ambient-pulse {
+    0%, 100% { opacity: 0.02; }
+    50% { opacity: 0.04; }
+  }
+
+  @keyframes forge-scanline-sweep {
+    0% { transform: translateY(0); opacity: 0; }
+    10%, 90% { opacity: 0.6; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+
+  @keyframes forge-ember-rise {
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0; }
+    5% { opacity: 1; }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(-120vh) translateX(40px) scale(0.2) rotate(360deg); opacity: 0; }
+  }
+
+  @keyframes forge-ember-rise-alt {
+    0% { transform: translateY(0) translateX(0) scale(1) rotate(0deg); opacity: 0; }
+    5% { opacity: 1; }
+    80% { opacity: 0.9; }
+    100% { transform: translateY(-120vh) translateX(-30px) scale(0.3) rotate(-360deg); opacity: 0; }
+  }
+
+  @keyframes forge-ember-glow {
+    0%, 100% { box-shadow: 0 0 10px var(--forge-orange), 0 0 20px var(--forge-hot); }
+    50% { box-shadow: 0 0 20px var(--forge-yellow), 0 0 40px var(--forge-orange), 0 0 60px rgba(255, 102, 0, 0.7); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fx-scanlines,
+    .fx-sweep { animation: none; }
+    .fx-sweep,
+    .ember-container { display: none; }
+  }
+</style>

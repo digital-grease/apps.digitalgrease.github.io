@@ -1,0 +1,85 @@
+---
+import BlogBaseLayout from '../../layouts/BlogBaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPublishedPosts, type Post } from '../../lib/posts';
+import type { GetStaticPaths } from 'astro';
+
+// The Digital/Analog dichotomy as a navigable axis. One page per pole.
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  const categories = [...new Set(posts.map((p) => p.data.category))];
+  return categories.map((category) => ({
+    params: { category: category.toLowerCase() },
+    props: { category, posts: posts.filter((p) => p.data.category === category) },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  category: 'Digital' | 'Analog';
+  posts: Post[];
+}
+
+const { category, posts } = Astro.props;
+const blurb =
+  category === 'Digital'
+    ? 'Security research, offensive tooling, engineering write-ups. The work that lives in terminals and threat models.'
+    : 'Blacksmithing, farming, building things with your hands. The work after the screen goes dark and the forge starts to glow.';
+---
+
+<BlogBaseLayout title={`${category} — digitalgrease blog`} description={blurb}>
+  <section class="cat-header" data-cat={category}>
+    <p class="eyebrow"><a href="/posts">// blog</a> / category</p>
+    <h1>{category}</h1>
+    <p class="blurb">{blurb}</p>
+  </section>
+
+  <div class="post-list">
+    {posts.map((p) => <PostCard entry={p} />)}
+  </div>
+</BlogBaseLayout>
+
+<style>
+  .cat-header {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 2.5rem 0 1.5rem;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.25rem;
+  }
+
+  .cat-header[data-cat='Digital'] { border-left-color: var(--info); }
+  .cat-header[data-cat='Analog'] { border-left-color: var(--warn); }
+
+  .eyebrow {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 1rem;
+  }
+
+  .eyebrow a { color: var(--text-muted); border-bottom: none; }
+  .eyebrow a:hover { color: var(--accent-bright); }
+
+  .cat-header h1 {
+    margin: 0 0 0.5rem;
+  }
+
+  .cat-header[data-cat='Digital'] h1 { color: var(--info); }
+  .cat-header[data-cat='Analog'] h1 { color: var(--warn); }
+
+  .blurb {
+    color: var(--text);
+    font-size: 1rem;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  .post-list {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1.5rem 0 3rem;
+  }
+</style>

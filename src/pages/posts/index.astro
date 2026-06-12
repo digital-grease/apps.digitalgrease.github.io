@@ -1,0 +1,105 @@
+---
+import BlogBaseLayout from '../../layouts/BlogBaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPublishedPosts, getAllTags } from '../../lib/posts';
+
+const posts = await getPublishedPosts();
+const tags = await getAllTags();
+
+const title = 'The Forge — digitalgrease blog';
+const description =
+  'Notes from the overlap between servers and steel, code and craft. Chasing a clean signal in the noise.';
+---
+
+<BlogBaseLayout title={title} description={description}>
+  <section class="blog-hero">
+    <p class="eyebrow"><a href="/">// the forge</a> / archive</p>
+    <h1>All Posts</h1>
+    <p class="lead">
+      Everything, newest first. Or browse by
+      <a href="/category/digital">Digital</a> / <a href="/category/analog">Analog</a>.
+    </p>
+  </section>
+
+  <div class="post-list">
+    {posts.map((p) => <PostCard entry={p} />)}
+  </div>
+
+  {tags.length > 0 && (
+    <section class="tag-cloud" aria-label="Tags">
+      <p class="tag-cloud-head">// tags</p>
+      <ul>
+        {tags.map((t) => (
+          <li><a href={`/tags/${t}`}>#{t}</a></li>
+        ))}
+      </ul>
+    </section>
+  )}
+</BlogBaseLayout>
+
+<style>
+  .blog-hero {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 2.5rem 0 2rem;
+  }
+
+  .eyebrow {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 1rem;
+  }
+
+  .blog-hero h1 {
+    margin: 0 0 1rem;
+    color: var(--accent-bright);
+  }
+
+  .lead {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--text);
+    max-width: 60ch;
+  }
+
+  .post-list {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem 0 2.5rem;
+  }
+
+  .tag-cloud {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 1.5rem 0 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .tag-cloud-head {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 0.75rem;
+  }
+
+  .tag-cloud ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag-cloud a {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-bottom: none;
+  }
+
+  .tag-cloud a:hover { color: var(--accent-bright); }
+</style>

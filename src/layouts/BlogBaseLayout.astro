@@ -1,0 +1,122 @@
+---
+// Base layout for the BLOG section only. Parallel to BaseLayout, but it wraps the
+// page in `.forge` and loads forge.css, so the blog renders in the full Forge
+// theme while the apps/projects pages stay on the lean tokens.css look.
+// Astro bundles CSS per route, so forge.css never reaches the apps pages.
+import BlogNav from '../components/BlogNav.astro';
+import Footer from '../components/Footer.astro';
+import ForgeAtmosphere from '../components/ForgeAtmosphere.astro';
+import { BLOG_ORIGIN } from '../lib/site';
+import '../styles/tokens.css';
+import '../styles/forge.css';
+// Self-hosted fonts (no Google Fonts request per page-view). Only the weights used.
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+import '@fontsource/share-tech-mono/400.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: 'website' | 'article';
+  ogImage?: string;
+  canonicalPath?: string;
+}
+
+// Default to the branded site OG card so listing/utility pages still share a large image.
+const { title, description, ogType = 'website', ogImage = '/og/site.png', canonicalPath } = Astro.props;
+// Canonicalize against the blog subdomain, not Astro.site (= apps origin).
+// canonicalPath lets a page override its URL (e.g. the home served at / via rewrite).
+const cleanPath = canonicalPath ?? Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/');
+const canonical = new URL(cleanPath, BLOG_ORIGIN).href;
+const ogImageUrl = ogImage ? new URL(ogImage, BLOG_ORIGIN).href : undefined;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonical} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="The Forge — digitalgrease" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+    {ogImageUrl && <meta property="og:image:width" content="1200" />}
+    {ogImageUrl && <meta property="og:image:height" content="630" />}
+
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+
+    <meta name="color-scheme" content="dark" />
+  </head>
+  <body class="forge">
+    <ForgeAtmosphere />
+    <a href="#main" class="skip-link">Skip to content</a>
+    <BlogNav />
+    <main class="site-main" id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <style>
+      /* Forge content panel (forge-base.css .md-main__inner): translucent dark
+         glass with cyan border + orange outer glow, floating over the embers. */
+      .site-main {
+        max-width: 880px;
+        margin: 1.5rem auto 4rem;
+        padding: 2rem 2rem 3rem;
+        position: relative;
+        z-index: 2;
+        background: rgba(10, 8, 6, 0.85);
+        border: 1px solid rgba(0, 204, 204, 0.2);
+        border-radius: 8px;
+        box-shadow:
+          0 0 40px rgba(0, 0, 0, 0.8),
+          0 0 80px rgba(255, 102, 0, 0.15),
+          inset 0 0 60px rgba(0, 0, 0, 0.6),
+          inset 0 1px 0 rgba(0, 204, 204, 0.1);
+        backdrop-filter: blur(8px);
+      }
+
+      .site-main:focus {
+        outline: none;
+      }
+
+      @media (max-width: 600px) {
+        .site-main {
+          max-width: none;
+          margin: 1rem auto 3rem;
+          padding: 1.5rem 1.1rem 2.5rem;
+        }
+      }
+
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: var(--accent);
+        color: var(--bg);
+        font-weight: 700;
+        border-radius: var(--radius);
+        z-index: 1001;
+        transition: top 120ms ease;
+      }
+
+      .skip-link:focus {
+        top: 0.5rem;
+        outline: 2px solid var(--accent-bright);
+        outline-offset: 2px;
+      }
+    </style>
+  </body>
+</html>

@@ -1,0 +1,300 @@
+/*
+  Forge theme — the blog's skin, a 1:1 port of the mkdocs forge-*.css.
+
+  Scoped under `.forge` (set on <body> by BlogBaseLayout) so it cannot touch the
+  apps/tokens pages — and Astro only bundles it onto blog routes anyway.
+
+  The forge look is entirely CSS + one image (technoforge.jpg) + static ember
+  divs (no JS). Strategy: port the palette, remap the shared design tokens so
+  every component renders forge unchanged, then re-add every flourish. The fixed
+  atmospheric layers (floor glow, scanlines, vignette, sweep, embers) live in
+  ForgeAtmosphere.astro; this file is palette + chrome + content styling.
+*/
+
+/* ── Palette (verbatim from forge-variables.css) ──────────────────────────── */
+:root {
+  --forge-hot: #ff3300;
+  --forge-orange: #ff6600;
+  --forge-yellow: #ffcc66;
+  --forge-white: #fffacd;
+  --forge-red: #cc0000;
+  --forge-amber: #ff9933;
+
+  --cyber-cyan: #00cccc;
+  --cyber-magenta: #cc00cc;
+  --cyber-green: #00cc33;
+
+  --forge-dark: #1a0a00;
+  --forge-darker: #0d0500;
+  --forge-charcoal: #2a1a0a;
+  --forge-soot: #0a0503;
+
+  --forge-glow: 0 0 10px rgba(255, 102, 0, 0.6), 0 0 20px rgba(255, 51, 0, 0.4), 0 0 30px rgba(255, 51, 0, 0.2);
+  --forge-intense-glow: 0 0 15px rgba(255, 102, 0, 0.8), 0 0 30px rgba(255, 51, 0, 0.6), 0 0 45px rgba(255, 51, 0, 0.4);
+  --heat-glow: 0 0 20px rgba(255, 204, 102, 0.5), 0 0 40px rgba(255, 153, 51, 0.3);
+  --cyber-glow: 0 0 3px rgba(0, 204, 204, 0.3), 0 0 6px rgba(0, 204, 204, 0.2);
+}
+
+/* ── Token remap + Dark Industrial Workshop body (forge-base.css) ─────────── */
+.forge {
+  --bg: #0a0806;
+  --bg-raised: #0f0a08;
+  --card: #150e0a;
+  --border: rgba(0, 204, 204, 0.25);
+
+  --text: #d4b5a0;        /* warm forge fg, matches mkdocs --md-default-fg-color */
+  --text-muted: #b89b7f;
+
+  --accent: var(--cyber-cyan);
+  --accent-bright: var(--forge-orange);
+  --accent-glow: rgba(255, 102, 0, 0.35);
+
+  --ok: var(--cyber-green);
+  --warn: var(--forge-amber);
+  --info: var(--cyber-cyan);
+
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 102, 0, 0.08), inset 0 1px 0 rgba(0, 204, 204, 0.1);
+
+  color: var(--text);
+  font-family: var(--font-sans); /* Inter prose; headings overridden to mono below */
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top, rgba(255, 102, 0, 0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(204, 0, 0, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom left, rgba(0, 204, 204, 0.05) 0%, transparent 50%),
+    linear-gradient(180deg, #0a0806 0%, #0f0a08 20%, #0a0806 50%, #150e0a 80%, #1a0f0a 100%);
+  background-attachment: fixed;
+}
+
+/* ── Header / nav glow (forge-base.css .md-header) ────────────────────────── */
+body.forge .site-nav {
+  background: rgba(10, 8, 6, 0.98);
+  border-bottom: 2px solid rgba(0, 204, 204, 0.4);
+  box-shadow: 0 0 30px rgba(0, 204, 204, 0.2), 0 4px 20px rgba(0, 0, 0, 0.8), inset 0 -1px 0 rgba(0, 204, 204, 0.3);
+}
+
+body.forge .brand {
+  color: var(--cyber-cyan);
+  text-shadow: 0 0 10px rgba(0, 204, 204, 0.8), 0 0 20px rgba(0, 204, 204, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+/* ── Typography (forge-typography.css) ────────────────────────────────────── */
+.forge :is(h1, h2, h3, h4, h5, h6) {
+  font-family: 'Share Tech Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.forge .site-nav,
+.forge .nav-link {
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* Cyan glowing post title with animated gradient underline. */
+.forge .post-hero h1 {
+  position: relative;
+  text-shadow: 0 0 15px rgba(0, 204, 204, 0.8), 0 0 30px rgba(0, 204, 204, 0.5), 0 2px 8px rgba(0, 0, 0, 0.8);
+  border-bottom: 2px solid var(--cyber-cyan);
+  padding-bottom: 0.5rem;
+  letter-spacing: 3px;
+}
+
+.forge .post-hero h1::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--cyber-cyan) 50%, transparent 100%);
+  box-shadow: 0 0 10px rgba(0, 204, 204, 0.6);
+}
+
+.forge .post-body h2 {
+  color: var(--forge-orange);
+  text-shadow: 0 0 10px rgba(255, 102, 0, 0.8), 0 0 20px rgba(255, 102, 0, 0.4);
+}
+
+.forge .post-body h3 {
+  color: var(--cyber-cyan);
+  text-shadow: 0 0 8px rgba(0, 204, 204, 0.6), 0 0 15px rgba(0, 204, 204, 0.3);
+}
+
+.forge .post-body :is(h4, h5, h6) {
+  color: var(--forge-amber);
+  text-shadow: var(--forge-glow);
+}
+
+/* Prose links — cyan resting, orange on hover. */
+.forge .post-body a {
+  color: var(--cyber-cyan);
+  border-bottom: 1px solid transparent;
+}
+
+.forge .post-body a:hover {
+  color: var(--forge-orange);
+  border-bottom-color: var(--forge-orange);
+  text-shadow: var(--forge-glow);
+}
+
+/* Terminal-style code. */
+.forge .post-body code {
+  color: var(--cyber-cyan);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(0, 204, 204, 0.3);
+  box-shadow: 0 0 8px rgba(0, 204, 204, 0.2), inset 0 1px 0 rgba(0, 204, 204, 0.1);
+}
+
+.forge .post-body pre {
+  background: #000;
+  border-color: rgba(0, 204, 204, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 204, 204, 0.15), inset 0 0 40px rgba(0, 0, 0, 0.9), inset 0 1px 0 rgba(0, 204, 204, 0.2);
+}
+
+.forge .post-body pre code {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* ── Category pills — ☠ Digital (cyan) / 🔥 Analog (amber) (extra.css) ───── */
+.forge .cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.forge .cat-pill[data-cat='Digital'] {
+  color: var(--cyber-cyan);
+  background: rgba(0, 204, 204, 0.08);
+  box-shadow: 0 0 8px rgba(0, 204, 204, 0.2);
+}
+
+.forge .cat-pill[data-cat='Analog'] {
+  color: var(--forge-amber);
+  background: rgba(255, 153, 51, 0.08);
+  box-shadow: 0 0 8px rgba(255, 153, 51, 0.2);
+}
+
+.forge .cat-pill__icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ── Tags — forged brands (forge-components.css .md-tag) ──────────────────── */
+.forge a.tag {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(255, 51, 0, 0.2), rgba(255, 102, 0, 0.1));
+  color: var(--forge-orange);
+  border: 1px solid var(--forge-orange);
+  border-radius: 4px;
+  padding: 0.2em 0.55em;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 5px rgba(255, 102, 0, 0.3);
+}
+
+.forge a.tag:hover {
+  background: linear-gradient(135deg, var(--forge-orange), var(--forge-hot));
+  color: var(--forge-darker);
+  box-shadow: var(--forge-glow);
+}
+
+/* ── Admonitions, tables (forge-components.css) — for posts that use them ─── */
+.forge .post-body :is(.admonition, blockquote) {
+  border-left: 3px solid var(--cyber-cyan);
+  background: linear-gradient(90deg, rgba(0, 204, 204, 0.12), rgba(0, 204, 204, 0.04));
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(0, 204, 204, 0.2);
+}
+
+.forge .post-body .admonition-title {
+  background: rgba(0, 204, 204, 0.15);
+  color: var(--cyber-cyan);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px rgba(0, 204, 204, 0.8);
+}
+
+.forge .post-body table {
+  border: 1px solid rgba(0, 204, 204, 0.3);
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(10, 8, 6, 0.6));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 204, 204, 0.1);
+}
+
+.forge .post-body th {
+  background: linear-gradient(135deg, rgba(0, 204, 204, 0.2), rgba(0, 204, 204, 0.1));
+  color: var(--cyber-cyan);
+  border-bottom: 2px solid var(--cyber-cyan);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 8px rgba(0, 204, 204, 0.6);
+}
+
+/* ── Cyberpunk scrollbar (forge-components.css). forge.css only loads on blog
+   routes, so this unscoped rule paints the page scrollbar there alone. ─────── */
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+  border: 1px solid rgba(0, 204, 204, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--cyber-cyan), rgba(0, 204, 204, 0.6));
+  border-radius: 6px;
+  border: 1px solid rgba(0, 204, 204, 0.3);
+  box-shadow: 0 0 10px rgba(0, 204, 204, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyber-cyan);
+  box-shadow: 0 0 20px rgba(0, 204, 204, 0.8);
+}
+
+/* ── Forge hero image (forge-home.css .forge-hero / .forge-image) ─────────── */
+.forge-hero {
+  position: relative;
+  margin: 2rem 0 2.5rem;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 102, 0, 0.3);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 80px rgba(255, 102, 0, 0.4), inset 0 0 100px rgba(0, 0, 0, 0.5);
+}
+
+.forge-hero img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: brightness(1.05) contrast(1.1) saturate(1.15);
+  animation: forge-glow 8s ease-in-out infinite;
+}
+
+.forge-hero .forge-hero__overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0px, transparent 2px, transparent 4px);
+  z-index: 2;
+}
+
+@keyframes forge-glow {
+  0%, 100% { filter: brightness(1.05) contrast(1.1) saturate(1.15); }
+  50% { filter: brightness(1.1) contrast(1.15) saturate(1.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .forge-hero img { animation: none; }
+}

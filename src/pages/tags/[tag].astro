@@ -1,0 +1,72 @@
+---
+import BlogBaseLayout from '../../layouts/BlogBaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPublishedPosts, type Post } from '../../lib/posts';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths = (async () => {
+  const posts = await getPublishedPosts();
+  const tags = [...new Set(posts.flatMap((p) => p.data.tags))];
+  return tags.map((tag) => ({
+    params: { tag },
+    props: { tag, posts: posts.filter((p) => p.data.tags.includes(tag)) },
+  }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  tag: string;
+  posts: Post[];
+}
+
+const { tag, posts } = Astro.props;
+---
+
+<BlogBaseLayout title={`#${tag} — digitalgrease blog`} description={`Posts tagged ${tag}.`}>
+  <section class="tag-header">
+    <p class="eyebrow"><a href="/posts">// blog</a> / tag</p>
+    <h1>#{tag}</h1>
+    <p class="count">{posts.length} {posts.length === 1 ? 'post' : 'posts'}</p>
+  </section>
+
+  <div class="post-list">
+    {posts.map((p) => <PostCard entry={p} />)}
+  </div>
+</BlogBaseLayout>
+
+<style>
+  .tag-header {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 2.5rem 0 1.5rem;
+  }
+
+  .eyebrow {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 1rem;
+  }
+
+  .eyebrow a { color: var(--text-muted); border-bottom: none; }
+  .eyebrow a:hover { color: var(--accent-bright); }
+
+  .tag-header h1 {
+    margin: 0 0 0.5rem;
+    color: var(--accent-bright);
+  }
+
+  .count {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  .post-list {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem 0 3rem;
+  }
+</style>

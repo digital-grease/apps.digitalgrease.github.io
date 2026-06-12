@@ -1,0 +1,131 @@
+---
+// Ported from the mkdocs about.md. Em-dashes cleaned; lily-background motif kept.
+import BlogBaseLayout from '../layouts/BlogBaseLayout.astro';
+
+const title = 'About — The Forge';
+const description =
+  'digitalgrease: cybersecurity engineer, hacker, maker. Where the digital and analog halves meet.';
+---
+
+<BlogBaseLayout title={title} description={description}>
+  <article class="post">
+    <header class="post-hero">
+      <h1>About The Forge</h1>
+    </header>
+
+    <div class="post-body">
+      <p>
+        I'm digitalgrease. Cybersecurity engineer, hacker, maker. I grew up rural and
+        poor with an internet connection and too much curiosity, became a father in my
+        teens, and spent over a decade in cities chasing the version of opportunity
+        that density promises. I've built a career in security and software engineering
+        (vulnerability management, infrastructure, architecture), the kind of work
+        where patience and ingenuity matter more than speed.
+      </p>
+      <p>
+        A couple years ago, my partner and I moved back to rural land. The forge
+        started glowing not long after.
+      </p>
+      <p>This blog is where both halves meet.</p>
+
+      <hr />
+
+      <h2>What You'll Find Here</h2>
+      <p>
+        <strong>Digital:</strong> Security research, offensive tooling, engineering
+        write-ups. The kind of work that lives in terminals and threat models. I build
+        tools like <a href="https://github.com/digital-grease/EVE">EVE</a> (VoIP covert
+        channels) and <a href="https://github.com/digital-grease/fauxx">Fauxx</a>
+        (ad-tech data poisoning) and write about them here, not just what they do, but
+        how they think.
+      </p>
+      <p>
+        <strong>Analog:</strong> Blacksmithing, farming, building things with your
+        hands. Walipini greenhouses, cedar enclosures, sheep and chickens. The work
+        that happens after the screen goes dark and the forge starts to glow.
+      </p>
+      <p>
+        <strong>Prose:</strong> Essays on technology, culture, nostalgia, and the
+        strange experience of watching the world rewire itself in real time. The kind
+        of writing that happens when you sit with an idea long enough to find out what
+        it actually means.
+      </p>
+      <p>
+        Hot metal and code are more alike than people think. Both do exactly what you
+        tell them, not what you mean. Both will expose a gap in your understanding
+        immediately and without sympathy. The forge doesn't care about your intentions
+        any more than the compiler does.
+      </p>
+
+      <hr />
+
+      <div class="forge-lily-bg">
+        <img class="forge-lily-bg-img" src="/img/spiderlily.png" alt="" aria-hidden="true" />
+        <h2>The Shape of This Place</h2>
+        <p>
+          I'm drawn to the quiet places where systems reveal their character. A forge
+          burning in the dark like the phosphor glow of an old CRT, both casting the
+          same patient light on whatever truth you're trying to shape. This blog is a
+          living notebook: experiments, half-finished ideas, problems solved the hard
+          way, and the occasional breakthrough.
+        </p>
+        <p>If you want the full picture: <a href="https://digitalgrease.dev">digitalgrease.dev</a></p>
+        <p><em>Memento mori. Act with purpose. Leave a clean signal in the noise.</em></p>
+      </div>
+    </div>
+
+    <nav class="post-foot-nav">
+      <a href="/">← Back to The Forge</a>
+    </nav>
+  </article>
+</BlogBaseLayout>
+
+<style>
+  .post {
+    max-width: var(--w-content);
+    margin: 0 auto;
+  }
+
+  .post-hero {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+  }
+
+  .post-hero h1 { margin: 0; }
+
+  .post-foot-nav {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+
+  /* Spider-lily background motif (ported from forge-components.css). */
+  .forge-lily-bg {
+    position: relative;
+    margin: 0 -1.5rem;
+    padding: 2rem 1.5rem;
+    overflow: hidden;
+  }
+
+  .forge-lily-bg-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    opacity: 0.22;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .forge-lily-bg > :is(h2, p) {
+    position: relative;
+    z-index: 1;
+  }
+</style>

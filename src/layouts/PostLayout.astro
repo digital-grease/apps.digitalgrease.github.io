@@ -1,0 +1,261 @@
+---
+import BlogBaseLayout from './BlogBaseLayout.astro';
+import Comments from '../components/Comments.astro';
+import AppCard from '../components/AppCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SeriesNav from '../components/SeriesNav.astro';
+import AuthorBlock from '../components/AuthorBlock.astro';
+import { getEntry, type CollectionEntry } from 'astro:content';
+import { readingTime, formatDate, getAdjacent } from '../lib/posts';
+
+interface Props {
+  entry: CollectionEntry<'posts'>;
+}
+
+const { entry } = Astro.props;
+const { title, description, date, category, tags, comments, app, project, series, seriesPart, authors } = entry.data;
+const minutes = readingTime(entry);
+const linkedApp = app ? await getEntry('apps', app) : undefined;
+const linkedProject = project ? await getEntry('projects', project) : undefined;
+const { newer, older } = await getAdjacent(entry);
+---
+
+<BlogBaseLayout
+  title={`${title} — digitalgrease`}
+  description={description}
+  ogType="article"
+  ogImage={`/og/${entry.id}.png`}
+>
+  <article class="post" data-pagefind-body>
+    <header class="post-hero">
+      <p class="eyebrow">
+        <a class="cat-pill" data-cat={category} href={`/category/${category.toLowerCase()}`}>
+          <span class="cat-pill__icon" aria-hidden="true">{category === 'Digital' ? '☠' : '🔥'}</span>
+          <span>{category}</span>
+        </a>
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        <span class="dot" aria-hidden="true">·</span>
+        <span>{minutes} min read</span>
+      </p>
+      <h1>{title}</h1>
+      <p class="post-desc">{description}</p>
+      {tags.length > 0 && (
+        <ul class="tag-row">
+          {tags.map((t) => (
+            <li><a class="tag" href={`/tags/${t}`}>#{t}</a></li>
+          ))}
+        </ul>
+      )}
+    </header>
+
+    {series && seriesPart && (
+      <div data-pagefind-ignore>
+        <SeriesNav series={series} current={seriesPart} />
+      </div>
+    )}
+
+    <div class="post-body">
+      <slot />
+    </div>
+
+    <div data-pagefind-ignore>
+      <AuthorBlock authors={authors} />
+    </div>
+
+    {linkedApp && (
+      <aside class="related" aria-label="The app this post is about" data-pagefind-ignore>
+        <p class="related-head">// the app this is about</p>
+        <AppCard app={linkedApp} />
+      </aside>
+    )}
+
+    {linkedProject && (
+      <aside class="related" aria-label="The project this post is about" data-pagefind-ignore>
+        <p class="related-head">// the project this is about</p>
+        <ProjectCard project={linkedProject} />
+      </aside>
+    )}
+
+    {(newer || older) && (
+      <nav class="post-nav" aria-label="Post navigation" data-pagefind-ignore>
+        {newer ? (
+          <a class="post-nav__link post-nav__newer" href={`/posts/${newer.id}`}>
+            <span class="post-nav__dir">← Newer</span>
+            <span class="post-nav__title">{newer.data.title}</span>
+          </a>
+        ) : (
+          <span></span>
+        )}
+        {older ? (
+          <a class="post-nav__link post-nav__older" href={`/posts/${older.id}`}>
+            <span class="post-nav__dir">Older →</span>
+            <span class="post-nav__title">{older.data.title}</span>
+          </a>
+        ) : (
+          <span></span>
+        )}
+      </nav>
+    )}
+
+    <nav class="post-foot-nav" data-pagefind-ignore>
+      <a href="/posts">← All posts</a>
+    </nav>
+
+    {comments && (
+      <div data-pagefind-ignore>
+        <Comments />
+      </div>
+    )}
+  </article>
+</BlogBaseLayout>
+
+<style>
+  .post {
+    max-width: var(--w-content);
+    margin: 0 auto;
+  }
+
+  .post-hero {
+    padding: 2rem 0 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .post-hero::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 36px;
+    height: 3px;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    margin: 1.25rem 0 1rem;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+  }
+
+  .post-hero h1 {
+    margin: 0 0 0.75rem;
+    color: var(--accent-bright);
+  }
+
+  .post-desc {
+    font-size: 1.1rem;
+    color: var(--text);
+    margin: 0 0 1.25rem;
+    line-height: 1.6;
+  }
+
+  /* Render markdown body using the shared global typography from tokens.css. */
+  .post-body :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .post-body :global(pre) {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem 1.15rem;
+    overflow-x: auto;
+    font-size: 0.88rem;
+  }
+
+  .post-body :global(blockquote) {
+    border-left: 3px solid var(--accent);
+    margin: 1.5rem 0;
+    padding: 0.25rem 0 0.25rem 1.25rem;
+    color: var(--text-muted);
+  }
+
+  .related {
+    margin-top: 3rem;
+  }
+
+  .related-head {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    margin: 0 0 0.75rem;
+  }
+
+  .post-foot-nav {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.95rem;
+  }
+
+  .cat-pill {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    border: 1px solid currentColor;
+  }
+
+  .cat-pill[data-cat='Digital'] { color: var(--info); }
+  .cat-pill[data-cat='Analog'] { color: var(--warn); }
+
+  .tag-row {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-bottom: none;
+  }
+
+  .tag:hover { color: var(--accent-bright); }
+
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .post-nav__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--card);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    transition: border-color 180ms ease;
+  }
+
+  .post-nav__link:hover { border-color: var(--accent); }
+  .post-nav__older { text-align: right; }
+  .post-nav__dir {
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .post-nav__title { color: var(--accent-bright); font-size: 0.95rem; }
+
+  @media (max-width: 600px) {
+    .post-nav { grid-template-columns: 1fr; }
+    .post-nav__older { text-align: left; }
+  }
+</style>

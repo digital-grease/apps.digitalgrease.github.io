@@ -1,0 +1,32 @@
+---
+// Apps 404 (tokens). Dist root /404.html — the default Caddy try_files fallback
+// for the apps host. The blog host falls back to /blog-404.html (forge).
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { BLOG_ORIGIN } from '../lib/site';
+---
+
+<BaseLayout title="404 — not found" description="That page doesn't exist.">
+  <section class="notfound">
+    <p class="code">404</p>
+    <h1>Signal lost</h1>
+    <p>That page doesn't exist, or it moved.</p>
+    <p class="links"><a href="/">← Apps</a> <a href={BLOG_ORIGIN}>The Forge ↗</a></p>
+  </section>
+</BaseLayout>
+
+<style>
+  .notfound {
+    max-width: var(--w-content);
+    margin: 0 auto;
+    padding: 4rem 0;
+    text-align: center;
+  }
+  .code {
+    font-family: var(--font-mono);
+    font-size: 4rem;
+    color: var(--accent);
+    margin: 0;
+  }
+  .notfound h1 { margin: 0.5rem 0 1rem; }
+  .links { display: flex; gap: 1.5rem; justify-content: center; }
+</style>

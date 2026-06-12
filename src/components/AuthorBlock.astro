@@ -1,0 +1,71 @@
+---
+import { getAuthors } from '../lib/authors';
+
+interface Props {
+  authors: string[];
+}
+
+const { authors } = Astro.props;
+const people = getAuthors(authors);
+---
+
+{people.length > 0 && (
+  <aside class="author-block" aria-label="Author">
+    {people.map((a) => (
+      <div class="author">
+        <img
+          class="author__avatar"
+          src={a.avatar}
+          alt=""
+          width="48"
+          height="48"
+          loading="lazy"
+          decoding="async"
+        />
+        <div class="author__meta">
+          <p class="author__name">
+            {a.url ? <a href={a.url} rel="noopener">{a.name}</a> : a.name}
+          </p>
+          <p class="author__desc">{a.description}</p>
+        </div>
+      </div>
+    ))}
+  </aside>
+)}
+
+<style>
+  .author-block {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .author {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+  }
+
+  .author__avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    flex: 0 0 48px;
+    object-fit: cover;
+  }
+
+  .author__meta { min-width: 0; }
+
+  .author__name {
+    margin: 0 0 0.15rem;
+    font-weight: 700;
+    color: var(--accent-bright);
+  }
+
+  .author__desc {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+</style>

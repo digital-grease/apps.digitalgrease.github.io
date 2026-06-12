@@ -49,4 +49,26 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { apps, projects };
+// Blog posts. The Digital/Analog dichotomy is the sacred top-level axis, so it
+// is a single required enum rather than a free-form tag. `app`/`project` link a
+// post to an entry in the sibling collections, which is what makes the merged
+// write-up <-> app <-> repo graph possible.
+const posts = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/posts' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    date: z.coerce.date(),
+    category: z.enum(['Digital', 'Analog']),
+    tags: z.array(z.string()).default([]),
+    authors: z.array(z.string()).default(['digitalgrease']),
+    draft: z.boolean().default(false),
+    comments: z.boolean().default(true),
+    app: z.string().optional(),
+    project: z.string().optional(),
+    series: z.string().optional(),
+    seriesPart: z.number().optional(),
+  }),
+});
+
+export const collections = { apps, projects, posts };

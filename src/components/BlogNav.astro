@@ -1,0 +1,90 @@
+---
+// Blog-specific nav. Promotes the Digital/Analog dichotomy to top-level (decision
+// #6). Cross-link to the apps subdomain is absolute; forge glow + Share Tech Mono
+// come from forge.css (body.forge .site-nav / .nav-link).
+import { APPS_ORIGIN } from '../lib/site';
+
+const internal = [
+  { label: 'home', href: '/' },
+  { label: 'digital', href: '/category/digital' },
+  { label: 'analog', href: '/category/analog' },
+  { label: 'about', href: '/about' },
+  { label: 'search', href: '/search' },
+];
+---
+
+<header class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="brand" aria-label="The Forge — home">
+      <span class="brand-mark">//</span>
+      <span class="brand-text">the forge</span>
+    </a>
+    <nav class="nav-links" aria-label="Primary">
+      {internal.map((i) => (
+        <a href={i.href} class="nav-link">{i.label}</a>
+      ))}
+      <a href={APPS_ORIGIN} class="nav-link external" rel="noopener">
+        apps <span class="ext-arrow" aria-hidden="true">↗</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  /* Structural only; forge glow/uppercase/mono are layered by forge.css. */
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.92);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .nav-inner {
+    max-width: var(--w-wide);
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text);
+    border-bottom: none;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .brand-mark { color: var(--accent); }
+
+  .nav-links {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 0.9rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    color: var(--text-muted);
+    border-bottom: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .nav-link:hover { color: var(--accent-bright); }
+
+  .ext-arrow {
+    font-size: 0.8em;
+    margin-left: 0.15em;
+    opacity: 0.6;
+  }
+</style>
