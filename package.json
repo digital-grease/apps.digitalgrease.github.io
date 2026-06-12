@@ -11,12 +11,12 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/mdx": "^4.0.0",
+    "@astrojs/mdx": "^6.0.3",
     "@astrojs/rss": "^4.0.0",
     "@astrojs/sitemap": "^3.2.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/share-tech-mono": "^5.2.7",
-    "astro": "^5.0.0",
+    "astro": "^6.4.6",
     "astro-og-canvas": "^0.11.1"
   },
   "devDependencies": {
