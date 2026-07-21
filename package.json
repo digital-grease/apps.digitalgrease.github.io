@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^4.0.0",
-    "@astrojs/rss": "^4.0.0",
+    "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.2.0",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/share-tech-mono": "^5.2.7",
