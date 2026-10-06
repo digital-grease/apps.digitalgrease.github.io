@@ -1,6 +1,6 @@
 ---
 title: Maintaining the Signal
-description: "Three months and three releases after launching Fauxx, the most interesting work wasn't a new feature. It was the decisions I had to reverse. What maintaining an open-source privacy app actually teaches you."
+description: "Three months and three releases after launching Fauxx, the most interesting work has been the decisions I had to reverse. What maintaining an open-source privacy app actually teaches you."
 date: 2026-06-11
 category: Digital
 tags:
@@ -13,11 +13,9 @@ app: fauxx
 
 Three months ago I shipped Fauxx and [wrote a post about it](/posts/fauxx-cant-stop-the-signal). Near the end, I made a prediction I didn't think of as a prediction: "The scrapers depend on platform UI that will change."
 
-Three releases later, the bill came due. The scrapers are gone. So is the Google Play build. And the most interesting work since launch wasn't a single new feature. It was the steady accumulation of things I got wrong on day one and had to walk back.
+Three releases later, the bill came due. The scrapers are gone. So is the Google Play build. And the most interesting work since launch has been the steady accumulation of things I got wrong on day one and had to walk back.
 
-That's the part nobody tells you about open source. Launching is the easy story: here's the idea, here's the architecture, here's the repo. Maintaining is the real one, and it's mostly made of reversals. The decisions you undo. The constraints you didn't know existed until you shipped into them.
-
-Here's what three months of maintaining Fauxx actually taught me.
+In open source, launching is the easy story: here's the idea, here's the architecture, here's the repo. Maintaining is the real one, and it's mostly made of reversals. The decisions you undo. The constraints you didn't know existed until you shipped into them.
 
 ---
 
@@ -45,7 +43,7 @@ Play won't allow the full app. The location-spoofing module uses Android's mock-
 
 At some point you have to admit the storefront and the app want incompatible things. A tool built to resist behavioral profiling can't really live inside the ecosystem that does the most profiling, on that ecosystem's terms.
 
-So Fauxx ships through F-Droid, GitHub Releases, and Obtainium now. The full version, all seven modules, no asterisks.
+So Fauxx ships through F-Droid, GitHub Releases, and Obtainium now. It's the full version, with all seven modules.
 
 I didn't delete the Play flavor, though. It still sits in the source tree, and CI still debug-compiles and unit-tests it on every run; it just no longer carries any quality gates and can't block a release. That's the compromise: keep the code from silently rotting in case the calculus ever changes, without letting a build I don't ship hold up one I do. Every quality gate moved over to the F-Droid `full` build, which is the one that actually reaches users.
 
@@ -71,7 +69,7 @@ Maintaining a project means making it safe for contributions you didn't write an
 
 Launch-day enthusiasm makes you overclaim. Maintenance is mostly the slow walk back.
 
-The dashboard used to lead with a "Noise Ratio." It looked authoritative. It measured nothing real, just throughput, `actions today / 500`, capped at 100%. Five hundred synthetic actions and the gauge reads "saturated," whether or not a single one of them actually steered your profile anywhere useful. It was a vanity number, and vanity numbers are worse than no number, because people trust them.
+The dashboard used to lead with a "Noise Ratio." It looked authoritative. It measured nothing real, just throughput, `actions today / 500`, capped at 100%. Five hundred synthetic actions and the gauge reads "saturated," whether or not a single one of them actually steered your profile anywhere useful. That made it a vanity number, and vanity numbers are worse than no number, because people trust them.
 
 It got replaced with something honest: a profile-drift card backed by KL divergence, an actual measure of how far the synthetic distribution has pushed your apparent profile away from your real one. Sometimes the honest metric is less flattering. That's the point of it.
 

@@ -21,7 +21,7 @@ The premise: make a perturbation that survives JPEG, H.264, Twitch's transcoder,
 
 A different framing showed up in [SPECTER](/posts/specter-hunting-ghosts-in-the-kv-cache) earlier this year, in a completely different domain: KV cache quantization in LLMs. The move was to stop treating quantization as the adversary and start treating it as the amplifier. Craft inputs that nudge values across quantization bin boundaries on purpose, and let the quantizer itself produce the large output drift you wanted in the first place.
 
-The shape of that argument transfers. This post covers the survive-the-codec research lineage, why it keeps hitting the same wall, what the SPECTER framing buys when you point it at a video codec, what [smudge](https://github.com/digital-grease/smudge) is doing about it, and, honestly, what's actually novel here vs. what's been in the air for a few years.
+The shape of that argument transfers. This post covers the survive-the-codec research lineage, why it keeps hitting the same wall, what the SPECTER framing buys when you point it at a video codec, what [smudge](https://apps.digitalgrease.dev/smudge) is doing about it, and, honestly, what's actually novel here vs. what's been in the air for a few years.
 
 
 ## The Survive-the-Codec Lineage

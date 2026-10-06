@@ -52,10 +52,12 @@ const iconSrc = icon ?? `/apps/${app.id}/icon.png`;
           <dt>License</dt>
           <dd>{license}</dd>
         </div>
-        <div>
-          <dt>Source</dt>
-          <dd><a href={repo} rel="noopener">{repo.replace('https://', '')}</a></dd>
-        </div>
+        {repo && (
+          <div>
+            <dt>Source</dt>
+            <dd><a href={repo} rel="noopener">{repo.replace('https://', '')}</a></dd>
+          </div>
+        )}
         {privacy && (
           <div>
             <dt>Privacy</dt>

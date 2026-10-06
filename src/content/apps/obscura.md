@@ -4,11 +4,8 @@ tagline: Fog, not deletion — plausible bio-noise for the LLM era.
 status: pre-release
 platforms: [android]
 license: AGPL-3.0
-repo: https://github.com/digital-grease/obscura
 accent: "#a89cc8"
 icon: /apps/obscura/icon.svg
-downloads:
-  github: https://github.com/digital-grease/obscura/releases
 order: 2
 ---
 

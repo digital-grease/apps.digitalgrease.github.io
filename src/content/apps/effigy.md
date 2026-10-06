@@ -4,11 +4,7 @@ tagline: Self-OSINT — see what's public about you, then remediate.
 status: pre-release
 platforms: [android]
 license: AGPL-3.0
-repo: https://github.com/digital-grease/effigy
-privacy: https://github.com/digital-grease/effigy/blob/main/PRIVACY.md
 accent: "#ffb000"
-downloads:
-  github: https://github.com/digital-grease/effigy/releases
 order: 3
 ---
 

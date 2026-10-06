@@ -9,7 +9,8 @@ const apps = defineCollection({
     status: z.enum(['shipping', 'pre-release', 'beta', 'alpha']),
     platforms: z.array(z.enum(['android', 'ios'])),
     license: z.string(),
-    repo: z.string().url(),
+    // Optional: omit while the source is private, so the page never links to a 404.
+    repo: z.string().url().optional(),
     privacy: z.string().url().optional(),
     accent: z.string().optional(),
     icon: z.string().optional(),
@@ -40,7 +41,8 @@ const projects = defineCollection({
     name: z.string(),
     tagline: z.string(),
     kind: z.enum(['research', 'tool']),
-    repo: z.string().url(),
+    // Optional: omit while the source is private, so the page never links to a 404.
+    repo: z.string().url().optional(),
     stack: z.array(z.string()).default([]),
     license: z.string(),
     status: z.enum(['active', 'spike', 'archived']).default('active'),

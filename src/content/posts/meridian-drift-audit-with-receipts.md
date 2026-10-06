@@ -70,7 +70,7 @@ Meridian is volunteer-maintained and API-cost-dominated. Each tier above Level 0
 | 2 | +$165 | Unalternate Opus + GPT-5; add Gemini 2.5 Pro. Weekly frontier granularity, three major providers. |
 | 3 | +$470 | Expand corpus 30 → 75. ~10 prompts per axis, credible coverage. |
 | 4 | +$1,000 | Full 150-prompt v1.0 corpus + durable S3/IPFS storage. Makes "retention forever" real. |
-| 5 | +$2,100 | CLAUDE.md spec corpus (200–300 prompts) + trained refusal classifier + Postgres index for researchers. |
+| 5 | +$2,100 | Full-spec corpus (200–300 prompts) + trained refusal classifier + Postgres index for researchers. |
 
 The full BUDGET.md in the repo shows the underlying cost model. Sponsorship is a single Buy Me a Coffee link: no Patreon, no GitHub Sponsors, no provider-adjacent corporate tier. If the record is useful to you, a coffee meaningfully extends how many weeks the project can keep running.
 

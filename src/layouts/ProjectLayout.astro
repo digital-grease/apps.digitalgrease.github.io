@@ -41,10 +41,12 @@ const pageTitle = `${name} — apps.digitalgrease`;
             <dd>{stack.join(' · ')}</dd>
           </div>
         )}
-        <div>
-          <dt>Source</dt>
-          <dd><a href={repo} rel="noopener">{repo.replace('https://', '')} ↗</a></dd>
-        </div>
+        {repo && (
+          <div>
+            <dt>Source</dt>
+            <dd><a href={repo} rel="noopener">{repo.replace('https://', '')} ↗</a></dd>
+          </div>
+        )}
       </dl>
     </header>
 
