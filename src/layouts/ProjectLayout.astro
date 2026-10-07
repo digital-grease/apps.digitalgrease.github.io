@@ -3,8 +3,9 @@
 // Gives the post→project card somewhere to land that isn't a bare GitHub redirect:
 // project detail + a "Source ↗" link to the repo + reverse links to its write-ups.
 import BaseLayout from './BaseLayout.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import { BLOG_ORIGIN } from '../lib/site';
+import { getPublishedPosts } from '../lib/posts';
 
 interface Props {
   project: CollectionEntry<'projects'>;
@@ -13,8 +14,8 @@ interface Props {
 const { project } = Astro.props;
 const { name, tagline, kind, repo, stack, license, status, accent } = project.data;
 
-// Reverse link: posts that declared `project: <this id>` in frontmatter.
-const writeups = (await getCollection('posts')).filter((p) => p.data.project === project.id);
+// Reverse link: published posts that declared `project: <this id>`, newest first.
+const writeups = (await getPublishedPosts()).filter((p) => p.data.project === project.id);
 
 const pageTitle = `${name} — apps.digitalgrease`;
 ---

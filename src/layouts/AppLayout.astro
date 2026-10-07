@@ -3,16 +3,17 @@ import BaseLayout from './BaseLayout.astro';
 import StatusBadge from '../components/StatusBadge.astro';
 import DownloadButtons from '../components/DownloadButtons.astro';
 import Screenshots from '../components/Screenshots.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import { BLOG_ORIGIN } from '../lib/site';
+import { getPublishedPosts } from '../lib/posts';
 
 interface Props {
   app: CollectionEntry<'apps'>;
 }
 
 const { app } = Astro.props;
-// Reverse link: posts that declared `app: <this id>`.
-const writeups = (await getCollection('posts')).filter((p) => p.data.app === app.id);
+// Reverse link: published posts that declared `app: <this id>`, newest first.
+const writeups = (await getPublishedPosts()).filter((p) => p.data.app === app.id);
 const {
   name,
   tagline,

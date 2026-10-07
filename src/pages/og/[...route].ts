@@ -2,16 +2,17 @@
 // Title/description come from frontmatter only (not the body). Referenced by
 // PostLayout as og:image = BLOG_ORIGIN + /og/<slug>.png.
 import { OGImageRoute } from 'astro-og-canvas';
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../../lib/posts';
 
-const posts = await getCollection('posts');
+// Published posts only, so a draft's title never ships in a production card.
+const posts = await getPublishedPosts();
 const pages = {
   ...Object.fromEntries(posts.map((post) => [post.id, post])),
   // Branded default card for listing/utility pages (home, archive, tags, search).
   site: { data: { title: 'The Forge', description: 'digitalgrease. Making, breaking, learning, fixing.' } },
 };
 
-// OGImageRoute is async in astro-og-canvas 0.11.1 — must be awaited.
+// OGImageRoute is async (since astro-og-canvas 0.11.1), so it must be awaited.
 export const { getStaticPaths, GET } = await OGImageRoute({
   param: 'route',
   pages,

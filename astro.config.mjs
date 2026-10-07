@@ -13,6 +13,9 @@ const isBlogPath = (p) =>
 export default defineConfig({
   site: 'https://apps.digitalgrease.dev',
   trailingSlash: 'never',
+  // Astro 7 defaults to 'jsx', which drops whitespace at line breaks between
+  // inline elements ("blog ↗" renders as "blog↗"). Keep the lossless mode.
+  compressHTML: true,
   integrations: [
     mdx(),
     sitemap({

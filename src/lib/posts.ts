@@ -10,12 +10,18 @@ export function readingTime(entry: Post): number {
   return Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 }
 
-/** Published posts, newest first. Drafts are hidden in production builds only. */
+/**
+ * Published posts, newest first; posts sharing a date are ordered by id so the
+ * order doesn't depend on how the content loader happens to read the files.
+ * Drafts are hidden in production builds only.
+ */
 export async function getPublishedPosts(): Promise<Post[]> {
   const posts = await getCollection('posts', ({ data }) =>
     import.meta.env.PROD ? data.draft !== true : true,
   );
-  return posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  return posts.sort(
+    (a, b) => b.data.date.getTime() - a.data.date.getTime() || a.id.localeCompare(b.id),
+  );
 }
 
 /** Unique tags across all published posts, alphabetical. */
