@@ -1,69 +1,65 @@
 ---
 name: Effigy
-tagline: Self-OSINT — see what's public about you, then remediate.
+tagline: Self-OSINT. See what's public about you, then clean it up.
 status: pre-release
 platforms: [android]
 license: AGPL-3.0
 accent: "#ffb000"
-order: 3
+order: 7
 ---
 
 ## The problem
 
-Before you can reduce your public exposure, you have to see it. Most data-removal
-services charge monthly, run opaque scrapers, and demand you hand over every
-identifier you want scrubbed — the exact threat model they claim to fix.
-Effigy takes the opposite approach: it runs open-source intelligence against
-*your own identity* on-device, tells you what's out there, and hands you the
-remediation links. You do the work; nothing leaves your phone that you did
-not explicitly request.
+Before you can reduce your public exposure, you have to see it. Most
+data-removal services charge a monthly fee, run scrapers you can't inspect, and
+ask you to hand over every identifier you want removed, which is the exposure
+they claim to fix. Effigy works the other way round. It runs open-source
+intelligence against your own identity on your phone, shows you what it finds,
+and gives you the removal links. You do the work, and nothing leaves your phone
+unless you ask for it.
 
 ## How it works
 
-You add identifiers (email, phone, username, name+address) and prove ownership
-of the verifiable ones. Email is verified by SMTP round-trip using your own
-credentials — the verification token never appears in the app before the
-email is sent, so typing it back requires actual inbox access. Phone (full
-build only) uses the device's own `SmsManager` to send a code directly to
-the claimed number.
+You add identifiers (email, phone, username, name and address) and prove you
+own the ones that can be verified. Email is verified by a round trip through
+your own mail account: the code isn't shown in the app until the email has been
+sent, so typing it back requires access to the inbox. In the full build, phone
+numbers are verified by sending a code through the phone's own SMS.
 
-The scanner then queries a narrow, deliberate set of sources:
+The scanner then queries a deliberately small set of sources:
 
-- **XposedOrNot** and **Hudson Rock Cavalier** for credential-free breach
-  detection across public breach corpora and the infostealer corpus. Run
-  by default, zero configuration.
-- **Have I Been Pwned** for richer per-breach metadata if you supply your
-  own API key. Otherwise skipped silently.
-- **Username enumeration** across 15 hand-picked public platforms (GitHub,
-  Reddit, Mastodon, Keybase, Lichess, Codeforces, and more) via
-  Sherlock-style signatures.
-- **Dork search** against DuckDuckGo with 14 curated dork queries per scan
-  (no Google API, no keys).
-- **People-search aggregators** (Spokeo, Whitepages, Radaris) surface
-  opt-out URLs — labeled `ASSUMED` to distinguish them from confirmed
-  detections, since their anti-bot gates defeat meaningful scraping.
+- **XposedOrNot** and **Hudson Rock Cavalier** check public breach data and
+  infostealer logs without needing an account. They run by default.
+- **Have I Been Pwned** adds per-breach detail if you supply your own API key,
+  and is skipped otherwise.
+- **Username checks** cover 15 public platforms, including GitHub, Reddit,
+  Mastodon, Keybase, Lichess and Codeforces, using Sherlock-style signatures.
+- **Search queries** run 14 curated dork queries per scan against DuckDuckGo,
+  with no Google API and no keys.
+- **People-search sites** (Spokeo, Whitepages, Radaris) get their opt-out links
+  listed, marked `ASSUMED` because their bot checks make real detection
+  unreliable.
 
-For each finding, tap through to a remediation action — opening the opt-out
-page, composing a removal email, or acknowledging breaches that cannot be
-withdrawn. The app tracks state transitions (discovered → submitted →
-confirmed → verified-removed → relisted → re-submitted).
+Each finding links to the next step: the opt-out page, a prepared removal
+email, or a note that a breach can't be withdrawn. The app tracks each one
+through discovered, submitted, confirmed, removed, relisted and resubmitted.
 
-## What Effigy will not do
+## What Effigy won't do
 
-- **No "look up someone else" mode.** No flag, no setting, no env var. Ever.
-- **No cloud sync.** Findings never leave your device except as queries you
-  explicitly trigger.
-- **No HTML scraping of people-search aggregators.** That path is a
-  weekly-maintenance trap against sites that barely give signal.
+There is no mode for looking up someone else, and there never will be, behind
+any flag or setting. Nothing is synced to a cloud, so your findings only leave
+the phone as the queries you start. It doesn't scrape people-search sites
+either, because keeping scrapers working against sites that block them is
+weekly maintenance for very little signal.
 
 ## Privacy
 
-On-device SQLCipher database, hardware-backed Android Keystore key wrap,
-no telemetry, no analytics, no Google services beyond Play distribution
-itself.
+Findings are kept in an on-device SQLCipher database whose key is wrapped by the
+hardware-backed Android Keystore. There is no telemetry or analytics, and no
+Google services beyond Play distribution itself.
 
 ## Status
 
-**v0.1 pre-release.** Functional end-to-end. Two flavors share a codebase
-and signing key: `play` (manual remediation only) and `full` (device-based
-SMS verification; roadmapped for automated opt-out resubmission in v0.2).
+**v0.1 pre-release.** It works end to end. Two builds share one codebase and
+signing key: `play`, where removal is manual, and `full`, which adds SMS phone
+verification and is planned to resubmit opt-outs automatically in v0.2.

@@ -18,68 +18,67 @@ screenshots:
   - src: /apps/signet/screens/03-verify-not-verified.webp
     alt: "Verify screen with a red rejection banner after an incorrect 4-word code."
   - src: /apps/signet/screens/04-pair-modes-sheet.webp
-    alt: "Pair modes bottom sheet — in-person QR, long-distance transport package, and rekey options."
+    alt: "Pair modes sheet with in-person QR, long-distance transport package, and rekey options."
   - src: /apps/signet/screens/05-pair-qr-display.webp
     alt: "Pairing QR code display for in-person two-phone exchange."
   - src: /apps/signet/screens/06-transport-package-share.webp
-    alt: "Transport package share sheet — encrypted long-distance pairing or lost-phone recovery payload."
+    alt: "Transport package share sheet for an encrypted long-distance pairing or lost-phone recovery payload."
   - src: /apps/signet/screens/07-peer-actions-menu.webp
-    alt: "Per-peer actions menu — label, inspect, rekey, unpair."
+    alt: "Per-contact actions menu: label, inspect, rekey, unpair."
   - src: /apps/signet/screens/08-liveness-challenge.webp
-    alt: "Liveness challenge — a randomly generated physical prompt for video-call verification."
-order: 4
+    alt: "Liveness challenge showing a randomly generated physical prompt for video-call verification."
+order: 2
 ---
 
 ## The problem
 
 When someone who sounds like your mother calls in a panic asking for bail
-money, Signet lets you verify it's actually her. The threat is voice and
-video deepfakes targeting families for financial fraud; vishing attacks that
-use scraped biographical data to impersonate people you know. Voice cloning
-is now real-time and cheap. The old defenses — recognizing a voice,
-remembering a shared anecdote — have a shelf life measured in quarters.
+money, Signet lets you check that it's really her. Voice and video deepfakes are
+now used against families for financial fraud, and vishing calls use scraped
+personal details to impersonate people you know. Voice cloning is cheap and
+works in real time, so recognizing a voice or remembering a shared story won't
+protect you for long.
 
 ## How it works
 
-Two phones pair **in person** by exchanging QR codes containing ephemeral
-X25519 public keys; each device derives the same shared secret via
-Diffie–Hellman and both display an identical 4-word confirmation phrase
-derived from that secret. Once confirmed, the secret lives in the Android
-Keystore (StrongBox when available) and is used to generate a rotating
-**4 BIP-39 words every 30 seconds** via HKDF-SHA-256.
+Two phones pair **in person** by scanning each other's QR codes, which carry
+ephemeral X25519 public keys. Each phone derives the same shared secret through
+Diffie-Hellman, and both show the same 4-word confirmation phrase derived from
+it. Once you confirm, the secret is stored in the Android Keystore (StrongBox
+where available) and used to generate **4 BIP-39 words every 30 seconds** with
+HKDF-SHA-256.
 
-To verify a caller later: ask them to read their 4 current words aloud,
-type what you hear into the 4-slot input. Green banner verified;
-red banner rejected. Clock drift is tolerated by a ±1 window on verify.
+To check a caller later, ask them to read out their 4 current words and type
+what you hear into the 4 slots. A green banner means verified and a red one
+means rejected. Verification accepts the windows either side of the current one,
+to allow for clock drift.
 
-**The two sides see different words each window.** A naïve design would
-let an attacker reflect *"grandma, read me your words so I know it's you"*
-and pass the verify. Signet binds each rotating code to a pair-time-derived
-role — so reflecting the verifier's own displayed words back fails by
-construction.
+**Each side sees different words.** With a simpler design, an attacker could
+ask "read me your words so I know it's you" and repeat them back to pass the
+check. Signet ties each side's words to a role fixed at pairing time, so words
+read back to their owner always fail.
 
-Words instead of digits because BIP-39 survives a stressed voice channel
-("74" vs "47" under a bad connection is exactly how grandma gets scammed).
-Four BIP-39 words ≈ 44 bits of entropy vs ~27 for eight digits, and the
-words are phonetically distinct by design.
+Signet uses words rather than digits because BIP-39 words hold up on a bad line
+with a stressed voice, where "74" and "47" are easy to confuse. Four BIP-39 words
+carry about 44 bits of entropy against about 27 for eight digits, and the word
+list is designed so the words sound distinct.
 
 ## Properties
 
-- **No server, no cloud, no account.** The manifest has no `INTERNET`
-  permission. There is no backend to subpoena, compromise, or shut down.
-- **No telemetry, no analytics, no ads.** This is a trust product. Not
-  now, not ever.
-- **Hardware-backed secrets.** AES-GCM inside Android Keystore, StrongBox
-  on supporting hardware.
-- **Offline by construction.** Airplane mode does not affect any flow.
-- **RFC-validated crypto.** X25519 against RFC 7748 §6.1; HKDF-SHA-256 via
-  the audited `cryptography` Dart package. BIP-39 embedded in-tree. All
+- **No server or account.** The app doesn't request the `INTERNET` permission,
+  so there's no backend that could be subpoenaed or shut down.
+- **No telemetry, analytics or ads,** now or later.
+- **Hardware-backed secrets.** AES-GCM inside the Android Keystore, using
+  StrongBox on hardware that has it.
+- **Works offline.** Airplane mode doesn't affect anything.
+- **Tested crypto.** X25519 is checked against RFC 7748 §6.1, and HKDF-SHA-256
+  comes from the audited `cryptography` Dart package. BIP-39 is built in, and all
   reference vectors pass.
 
 ## Status
 
-**Beta, Android only.** Available via GitHub Releases and F-Droid. Built
-on Flutter for future cross-platform support; iOS is generated but not
-tested in this release. v0.2 work (multi-peer, long-distance pairing,
-lost-phone recovery, challenge-response grid, liveness prompts) is landed
-in the codebase but not yet store-packaged.
+**Beta, Android only.** Available from GitHub Releases and F-Droid. It's built
+with Flutter so other platforms can follow; an iOS build exists but hasn't been
+tested in this release. The v0.2 features (multiple contacts, long-distance
+pairing, lost-phone recovery, a challenge-response grid and liveness prompts)
+are in the codebase but not yet in a published release.

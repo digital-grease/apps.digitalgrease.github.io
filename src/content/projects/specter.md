@@ -1,6 +1,6 @@
 ---
 name: SPECTER
-tagline: Input-driven KV cache perturbation. Investigates whether crafted inputs can push cached values across quantization boundaries during normal LLM inference — cache corruption from normal input channels, no privileged cache access required.
+tagline: Input-driven KV cache perturbation. Investigates whether crafted inputs can push cached values across quantization boundaries during normal LLM inference, corrupting the cache through ordinary input with no privileged access.
 kind: research
 stack: [Python, PyTorch]
 license: AGPL-3.0

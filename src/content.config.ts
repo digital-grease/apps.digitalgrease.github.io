@@ -7,7 +7,7 @@ const apps = defineCollection({
     name: z.string(),
     tagline: z.string(),
     status: z.enum(['shipping', 'pre-release', 'beta', 'alpha']),
-    platforms: z.array(z.enum(['android', 'ios'])),
+    platforms: z.array(z.enum(['android', 'ios', 'linux', 'macos', 'windows'])),
     license: z.string(),
     // Optional: omit while the source is private, so the page never links to a 404.
     repo: z.string().url().optional(),
